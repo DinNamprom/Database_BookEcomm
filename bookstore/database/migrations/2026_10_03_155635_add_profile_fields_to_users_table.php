@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('first_name')->nullable()->after('name');
             $table->string('last_name')->nullable()->after('first_name');
             $table->text('address')->nullable()->after('email');
+            $table->string('phone', 20)->nullable()->after('address');
         });
     }
 

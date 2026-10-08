@@ -14,7 +14,8 @@
         rel="stylesheet"
     >
 
-    <link rel="stylesheet" href="{{ asset('css/book-detail.css') }}">
+    <link rel="stylesheet"
+      href="{{ asset('css/book-detail.css') }}?v={{ filemtime(public_path('css/book-detail.css')) }}">
 </head>
 
 <body class="book-page">
@@ -163,61 +164,55 @@
 
                 {{-- Format --}}
                 <div class="book-detail__format">
-
-                    <span>
+                    <span class="book-detail__format-name">
                         {{ $book->format ?? 'Not specified' }}
                     </span>
 
                     <span class="book-detail__format-price">
                         ${{ number_format((float) $book->price, 2) }}
-                        / Selected ✓
+                        <span class="book-detail__selected">
+                            / Selected ✓
+                        </span>
                     </span>
-
                 </div>
 
 
-                {{-- Quantity / Add to Bag --}}
+                {{-- Quantity + Add to Bag --}}
                 <div class="book-detail__purchase">
-
                     <div class="book-detail__quantity">
-
                         <span class="book-detail__quantity-button">
                             −
                         </span>
 
-                        <span>1</span>
+                        <span class="book-detail__quantity-value">
+                            1
+                        </span>
 
                         <span class="book-detail__quantity-button">
                             +
                         </span>
-
                     </div>
 
                     <div class="book-detail__add-button">
-
-                        <span>
+                        <span class="book-detail__add-label">
                             Log in to add to bag
                         </span>
 
                         <span class="book-detail__add-arrow">
                             ↗
                         </span>
-
                     </div>
-
                 </div>
 
 
                 {{-- Login / Save message --}}
                 <div class="book-detail__login-note">
-
                     <p>
                         Please log in or create an account before adding books
                         and placing an order. Your selection will be here.
                     </p>
 
                     <div class="book-detail__login-links">
-
                         <span class="book-detail__login-link">
                             Log in / Register ↗
                         </span>
@@ -225,9 +220,7 @@
                         <span class="book-detail__save">
                             ♡ Save book · Log in
                         </span>
-
                     </div>
-
                 </div>
 
 

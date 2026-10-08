@@ -18,6 +18,29 @@
       href="{{ asset('css/book-detail.css') }}?v={{ filemtime(public_path('css/book-detail.css')) }}">
 </head>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const saveButton = document.getElementById('saveBookButton');
+
+        if (!saveButton) return;
+
+        const saveIcon = saveButton.querySelector('.book-detail__save-icon');
+        const saveLabel = saveButton.querySelector('.book-detail__save-label');
+
+        saveButton.addEventListener('click', function () {
+            const isSaved = saveButton.classList.toggle('is-saved');
+
+            if (isSaved) {
+                saveIcon.textContent = '♥';
+                saveLabel.textContent = 'Saved';
+            } else {
+                saveIcon.textContent = '♡';
+                saveLabel.textContent = 'Save book · Log in';
+            }
+        });
+    });
+</script>
+
 <body class="book-page">
 
     <main class="book-detail">
@@ -34,9 +57,9 @@
                 / {{ $book->title }}
             </span>
 
-            <span class="book-detail__nav-back">
-                ← Back to the collection
-            </span>
+            <button type="button" class="book-detail__back" id="backToCollection">
+            ← Back to the collection
+            </button>
         </nav>
 
 
@@ -213,13 +236,14 @@
                     </p>
 
                     <div class="book-detail__login-links">
-                        <span class="book-detail__login-link">
-                            Log in / Register ↗
-                        </span>
+                        <button type="button" class="book-detail__login-link" id="loginButton">
+                        Log in / Register ↗
+                        </button>
 
-                        <span class="book-detail__save">
-                            ♡ Save book · Log in
-                        </span>
+                        <button type="button" class="book-detail__save" id="saveBookButton">
+                        <span class="book-detail__save-icon">♡</span>
+                        <span class="book-detail__save-label">Save book · Log in</span>
+                    </button>
                     </div>
                 </div>
 
@@ -353,9 +377,9 @@
                         Keep following your curiosity.
                     </h2>
 
-                    <span class="book-detail__related-link">
+                    <button type="button" class="book-detail__related-link" id="browseAllBooks">
                         Browse all books ↗
-                    </span>
+                    </button>
 
                 </div>
 
@@ -453,38 +477,6 @@
             </section>
 
         @endif
-
-
-        {{-- =====================================================
-             NEWSLETTER
-             ===================================================== --}}
-        <section class="book-detail__newsletter">
-
-            <div>
-
-                <p class="book-detail__newsletter-label">
-                    STAY IN THE LOOP
-                </p>
-
-                <h2 class="book-detail__newsletter-title">
-                    New books, thoughtful notes.
-                </h2>
-
-            </div>
-
-            <div class="book-detail__newsletter-form">
-
-                <span class="book-detail__newsletter-placeholder">
-                    Your email address
-                </span>
-
-                <span>
-                    SUBSCRIBE ↗
-                </span>
-
-            </div>
-
-        </section>
 
     </main>
 

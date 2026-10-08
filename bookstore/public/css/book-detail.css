@@ -619,38 +619,65 @@ color: var(--book-muted);
 }
 
 .book-detail__login-links {
-display: flex;
-align-items: center;
-justify-content: space-between;
-
-
-width: 100%;
-
-margin-top: 10px;
-
-
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 10px;
 }
 
 .book-detail__login-link {
-flex-shrink: 0;
-
-
-color: var(--book-accent);
-
-white-space: nowrap;
-
-
+    flex-shrink: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--book-accent);
+    font: inherit;
+    cursor: pointer;
+    white-space: nowrap;
 }
 
 .book-detail__save {
-margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: auto;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--book-ink);
+    font: inherit;
+    cursor: pointer;
+}
 
+.book-detail__save-icon {
+    font-size: 16px;
+    line-height: 1;
+}
 
-color: var(--book-ink);
+.book-detail__save:hover {
+    opacity: 0.65;
+}
 
-white-space: nowrap;
+.book-detail__save.is-saved {
+    color: var(--book-accent);
+}
 
+.book-detail__save.is-saved .book-detail__save-icon {
+    font-size: 15px;
+}
 
+.book-detail__back {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--book-ink);
+    font: inherit;
+    cursor: pointer;
+}
+
+.book-detail__back:hover {
+    opacity: 0.65;
 }
 
 /* =========================================================
@@ -685,6 +712,7 @@ font-size: 36px;
 font-weight: 400;
 line-height: 1.08;
 letter-spacing: -0.03em;
+transform: translateY(-12px);
 }
 
 .book-detail__particulars-list {
@@ -744,7 +772,17 @@ letter-spacing: -0.03em;
 }
 
 .book-detail__related-link {
-font-size: 11px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--book-ink);
+    font: inherit;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.book-detail__related-link:hover {
+    opacity: 0.65;
 }
 
 .book-detail__related-grid {
@@ -962,72 +1000,6 @@ font-size: 11px;
 }
 
 /* =========================================================
-18. NEWSLETTER
-========================================================= */
-
-.book-detail__newsletter {
-display: flex;
-align-items: flex-end;
-justify-content: space-between;
-
-
-margin-top: 64px;
-padding: 40px 0;
-
-border-top: 1px solid var(--book-ink);
-border-bottom: 1px solid var(--book-ink);
-
-
-}
-
-.book-detail__newsletter-label {
-color: var(--book-accent);
-
-
-font-size: 11px;
-line-height: 1.5;
-
-
-}
-
-.book-detail__newsletter-title {
-margin-top: 12px;
-
-
-font-family: var(--book-font-display);
-font-size: 40px;
-font-weight: 400;
-line-height: 1.08;
-letter-spacing: -0.03em;
-
-
-}
-
-.book-detail__newsletter-form {
-display: flex;
-align-items: center;
-justify-content: space-between;
-
-
-width: 405px;
-height: 50px;
-
-border-bottom: 1px solid var(--book-ink);
-
-font-size: 12px;
-
-
-}
-
-.book-detail__newsletter-placeholder {
-color: var(--book-muted);
-}
-
-.book-detail__newsletter-submit {
-color: var(--book-ink);
-}
-
-/* =========================================================
 19. EMPTY RELATED STATE
 ========================================================= */
 
@@ -1085,10 +1057,6 @@ background: #ffffff;
 .book-detail {
     max-width: none;
     padding: 20px;
-}
-
-.book-detail__newsletter {
-    display: none;
 }
 
 .book-detail__add-button,

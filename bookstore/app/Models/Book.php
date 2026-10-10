@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Book extends Model
 {
-    public $timestamps = false;
+    public $timestamps = false; // Existing migration didn't have timestamps
 
     protected $fillable = [
         'title',
@@ -19,6 +20,9 @@ class Book extends Model
         'in_stock',
         'publish_date',
         'format',
+        'cover_image',
+        'cover_bg_color',
+        'is_featured',
     ];
 
     protected $casts = [
@@ -32,12 +36,12 @@ class Book extends Model
         return 'slug';
     }
 
-    public function author()
+    public function author(): BelongsTo
     {
         return $this->belongsTo(Author::class);
     }
 
-    public function publisher()
+    public function publisher(): BelongsTo
     {
         return $this->belongsTo(Publisher::class);
     }

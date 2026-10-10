@@ -1,135 +1,307 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <title>@yield('title', 'Margin')</title>
+
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
     <style>
         :root {
-            --ink: #191919;
-            --taupe: #68665F;
-            --taupe-light: #BDB9AE;
-            --cream: #F4F1E9;
-            --accent: #D83A22;
+            --cream: #f2f0e9;
+            --ink: #1a1a1a;
+            --accent: #d4462e;
+            --taupe: #7d776b;
+            --taupe-light: #d6d1c4;
         }
 
-        /* Plain CSS on purpose: header lines and the two-column layout
-           don't depend on Tailwind classes being compiled. */
-        body {
-            margin: 0;
-            min-height: 100vh;
-            background-color: var(--cream);
-            color: var(--ink);
-            font-family: 'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace;
-            font-size: 13px;
-        }
-        h1, h2, .display { font-family: 'Bodoni Moda', serif; }
-        a { color: inherit; text-decoration: none; }
+        body { background: var(--cream); color: var(--ink); font-family: 'IBM Plex Mono', monospace; font-size: 14px; margin: 0; }
+        h1, h2, h3, h4, h5, h6 { font-family: 'Bodoni Moda', serif; font-weight: 400; }
+        .wrap { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        .muted { color: var(--taupe); font-size: 12px; }
 
-        .wrap { max-width: none; margin: 0 auto; padding-left: 64px; padding-right: 64px; }
+        /* ---------- Header ---------- */
+        .top-banner { background: var(--ink); color: var(--cream); font-size: .75rem; letter-spacing: .05em; text-transform: uppercase; padding: .5rem 2rem; }
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 2rem; border-bottom: 2px solid var(--ink); }
+        .header-logo { font-family: 'Bodoni Moda', serif; font-size: 2.5rem; font-weight: 700; letter-spacing: .1em; text-decoration: none; color: var(--ink); position: relative; }
+        .header-logo sup { font-family: 'IBM Plex Mono', monospace; font-size: 1rem; position: absolute; top: .5rem; right: -1.2rem; color: var(--accent); }
+        .nav-links, .header-right { display: flex; gap: 2rem; text-transform: uppercase; font-size: .9rem; }
+        .nav-links a, .header-right a { text-decoration: none; color: var(--ink); }
+        .nav-links a.active { color: var(--accent); }
 
-        /* Header */
-        .topbar { background: var(--ink); color: var(--cream); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; padding: 7px 0; }
-        .site-header { border-bottom: 2px solid var(--ink); }
-        .site-header .wrap { display: flex; align-items: center; justify-content: space-between; padding-top: 18px; padding-bottom: 18px; }
-        .brand { font-family: 'Bodoni Moda', serif; font-size: 44px; line-height: 1; letter-spacing: .04em; }
-        .brand sup { color: var(--accent); font-size: 11px; vertical-align: top; }
-        .site-nav { display: flex; gap: 32px; font-size: 12px; }
-        .site-user { display: flex; gap: 24px; align-items: center; font-size: 12px; }
-        .site-user .bag { color: var(--accent); }
+        /* ---------- Step indicator ---------- */
+        .steps { display: flex; gap: 2.5rem; padding: 1rem 2rem; border-bottom: 2px solid var(--ink); font-size: .8rem; text-transform: uppercase; letter-spacing: .05em; color: var(--taupe); }
 
-        /* Steps row */
-        .steps { border-bottom: 1px solid var(--taupe-light); }
-        .steps .wrap { display: flex; justify-content: space-between; align-items: center; padding-top: 16px; padding-bottom: 16px; font-size: 11px; color: var(--taupe); }
-        .steps-list { display: flex; gap: 24px; }
-        .signed-in { text-transform: uppercase; letter-spacing: .06em; color: var(--ink); }
+        /* ---------- Page ---------- */
+        .shop-main { max-width: 1200px; margin: 0 auto; padding: 40px 2rem 0; }
+        .eyebrow { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin: 0 0 8px; }
+        .page-title { font-size: 48px; line-height: 1.1; margin: 0 0 32px; }
+        .shop-grid { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 48px; align-items: start; }
+        @media (max-width: 900px) { .shop-grid { grid-template-columns: 1fr; } }
 
-        /* Page */
-        .eyebrow { color: var(--accent); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; margin: 36px 0 8px; }
-        .page-title { font-size: 64px; line-height: 1.05; margin: 0 0 40px; font-weight: 400; }
+        /* ---------- Home page ---------- */
+        .home-section { padding: 3rem 2rem; }
+        .home-section h2,
+        .home-section h3 { font-family: 'Playfair Display', serif; font-weight: 400; }
 
-        /* Two columns: content on the left, summary box on the right */
-        .shop-grid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 40px; align-items: start; }
+        .home-section .section-header { margin-bottom: 3rem; }
+        .home-section .section-subtitle { color: #d4462e; font-size: 0.9rem; text-transform: uppercase; margin-bottom: 0.5rem; }
+        .home-section .section-title-wrap { display: flex; justify-content: space-between; align-items: baseline; }
+        .home-section .section-title { font-size: 4rem; margin: 0; letter-spacing: -0.02em; }
+        .home-section .browse-link { color: #1a1a1a; text-decoration: none; text-transform: uppercase; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem; }
 
-        /* Cart table */
-        .cart-table { width: 100%; border-collapse: collapse; border-top: 1px solid var(--ink); }
-        .cart-table th { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; font-weight: 400; padding: 12px 0; border-bottom: 1px solid var(--ink); text-align: left; }
-        .cart-table td { padding: 24px 0; border-bottom: 1px solid var(--taupe-light); vertical-align: middle; }
+        .home-section .books-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; }
+        .home-section .book-card { display: flex; flex-direction: column; }
+
+        .home-section .book-cover { aspect-ratio: 3/4; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 2rem; border: 1px solid #1a1a1a; margin-bottom: 1rem; position: relative; text-align: center; }
+        .home-section .book-cover-top { position: absolute; top: 1rem; left: 1rem; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; }
+        .home-section .book-cover-title { font-family: 'Playfair Display', serif; font-size: 2.2rem; line-height: 1.1; margin-bottom: 2rem; }
+        .home-section .book-cover-author { position: absolute; bottom: 1rem; left: 1rem; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .home-section .book-shape { width: 120px; height: 120px; display: flex; justify-content: center; align-items: center; }
+
+        .home-section .book-meta { font-size: 0.8rem; text-transform: uppercase; color: #666; margin-bottom: 0.5rem; }
+        .home-section .book-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; margin: 0 0 1rem 0; line-height: 1.2; }
+        .home-section .book-author-info { font-size: 0.9rem; margin-bottom: 0.2rem; }
+        .home-section .book-format-stock { font-size: 0.8rem; color: #666; padding-bottom: 1rem; border-bottom: 1px solid #ccc; margin-bottom: 1rem; }
+        .home-section .book-price-action { display: flex; justify-content: space-between; align-items: center; }
+        .home-section .book-price { font-size: 1.1rem; }
+        .home-section .view-book-btn { color: #d4462e; text-decoration: none; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.05em; }
+
+        /* Shapes for dummy covers */
+        .home-section .shape-circle { width: 80px; height: 80px; border-radius: 50%; border: 10px solid white; position: relative; }
+        .home-section .shape-circle::after { content: ''; position: absolute; width: 20px; height: 20px; background: white; border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+
+        .home-section .shape-steps { width: 100px; height: 60px; display: flex; flex-direction: column; align-items: center; }
+        .home-section .shape-steps .step1 { width: 100px; height: 5px; background: black; margin-bottom: 5px; }
+        .home-section .shape-steps .step2 { width: 80px; height: 20px; border: 2px solid black; margin-bottom: 5px; }
+        .home-section .shape-steps .step3 { width: 50px; height: 30px; background: black; }
+
+        .home-section .shape-split-circle { width: 90px; height: 90px; border-radius: 50%; background: white; position: relative; overflow: hidden; }
+        .home-section .shape-split-circle::after { content: ''; position: absolute; top: 45%; left: -10px; right: -10px; height: 10px; background: #1a1a1a; }
+
+        .home-section .shape-bars { display: flex; align-items: flex-end; gap: 8px; height: 80px; }
+        .home-section .shape-bars div { background: black; width: 20px; }
+        .home-section .shape-bars .b1 { height: 40px; }
+        .home-section .shape-bars .b2 { height: 70px; }
+        .home-section .shape-bars .b3 { height: 50px; }
+        .home-section .shape-bars .b4 { height: 80px; }
+
+        /* ---------- Cart ---------- */
+        .cart-table { width: 100%; border-collapse: collapse; }
+        .cart-table th { text-align: left; font-size: 11px; font-weight: 400; letter-spacing: .1em; text-transform: uppercase; color: var(--taupe); padding: 0 0 12px; border-bottom: 1px solid var(--ink); }
+        .cart-table td { padding: 20px 0; border-bottom: 1px solid var(--taupe-light); vertical-align: top; }
         .cart-table .ctr { text-align: center; }
         .cart-table .num { text-align: right; }
-        .cart-item { display: flex; gap: 20px; }
-        .cover { flex: none; width: 64px; height: 88px; background: var(--taupe-light); display: flex; align-items: center; justify-content: center; text-align: center; font-size: 9px; padding: 4px; box-sizing: border-box; }
-        .book-title { font-family: 'Bodoni Moda', serif; font-size: 22px; margin: 0 0 6px; }
-        .muted { color: var(--taupe); font-size: 11px; }
-        .link-remove { background: none; border: 0; padding: 0; margin-top: 6px; color: var(--accent); font: inherit; font-size: 11px; cursor: pointer; }
-        .cart-foot { display: flex; justify-content: space-between; padding-top: 20px; font-size: 11px; color: var(--taupe); }
-
-        /* Quantity stepper */
+        .cart-item { display: flex; gap: 16px; }
+        .cart-item .cover { width: 64px; height: 88px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 9px; padding: 4px; background: var(--taupe-light); }
+        .cart-item .book-title { font-family: 'Bodoni Moda', serif; font-size: 20px; margin: 0 0 4px; }
+        .link-remove { background: none; border: 0; padding: 0; margin-top: 8px; font: inherit; font-size: 12px; color: var(--accent); text-decoration: underline; cursor: pointer; }
         .qty { display: inline-flex; align-items: center; border: 1px solid var(--ink); }
-        .qty form { margin: 0; display: flex; }
-        .qty button { background: none; border: 0; padding: 6px 10px; cursor: pointer; color: var(--ink); font: inherit; }
-        .qty input { width: 36px; text-align: center; background: transparent; border: 0; font: inherit; color: var(--ink); padding: 0; -moz-appearance: textfield; }
+        .qty form { margin: 0; }
+        .qty button { width: 32px; height: 36px; background: transparent; border: 0; font: inherit; cursor: pointer; }
+        .qty input { width: 44px; height: 36px; text-align: center; border: 0; border-left: 1px solid var(--ink); border-right: 1px solid var(--ink); background: transparent; font: inherit; -moz-appearance: textfield; }
         .qty input::-webkit-outer-spin-button, .qty input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        .cart-foot { display: flex; justify-content: space-between; padding-top: 16px; font-size: 12px; color: var(--taupe); }
+        .cart-foot a { color: var(--ink); }
 
-        /* Summary box */
+        /* ---------- Order summary ---------- */
         .summary { border: 1px solid var(--ink); padding: 24px; }
-        .summary h2 { font-size: 30px; font-weight: 400; margin: 0 0 16px; padding-bottom: 16px; border-bottom: 1px solid var(--ink); }
-        .summary .row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 12px; }
-        .summary .total { display: flex; justify-content: space-between; align-items: baseline; border-top: 1px solid var(--ink); margin-top: 12px; padding-top: 16px; }
-        .summary .total .label { font-family: 'Bodoni Moda', serif; font-size: 26px; }
-        .summary .total .amount { font-family: 'Bodoni Moda', serif; font-size: 40px; }
+        .summary h2 { font-size: 24px; margin: 0 0 16px; }
+        .summary .row { display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px; }
+        .summary .total { display: flex; justify-content: space-between; align-items: baseline; border-top: 1px solid var(--ink); margin-top: 12px; padding-top: 12px; }
+        .summary .total .label { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; }
+        .summary .total .amount { font-family: 'Bodoni Moda', serif; font-size: 28px; }
         .summary .divider { border-top: 1px solid var(--taupe-light); margin: 16px 0; }
-        .btn-accent { display: block; text-align: center; background: var(--accent); color: #fff; padding: 14px; margin: 16px 0; font-size: 12px; }
-        .summary .label-sm { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; margin: 0 0 4px; }
+        .summary .label-sm { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--taupe); margin: 0 0 4px; }
+        .btn-accent { display: block; text-align: center; background: var(--accent); color: #fff; text-decoration: none; padding: 14px 16px; margin: 16px 0; font-size: 13px; }
+        .btn-accent:hover { opacity: .9; }
 
-        @media (max-width: 800px) {
-            .shop-grid { grid-template-columns: minmax(0, 1fr); }
-            .site-nav { display: none; }
-            .page-title { font-size: 40px; }
+        /* ---------- Footer ---------- */
+        .site-footer { background: #1a1a16; color: var(--cream); padding: 56px 0 40px; margin-top: 5rem; }
+        .site-footer .brand-lg { font-family: 'Bodoni Moda', serif; font-size: 44px; line-height: 1; letter-spacing: .04em; display: flex; align-items: center; gap: 6px; }
+        .site-footer .reg { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border: 1px solid var(--cream); border-radius: 50%; font-size: 14px; letter-spacing: 0; }
+        .site-footer p { font-size: 12px; line-height: 1.6; margin: 20px 0 0; }
+        .site-footer hr { border: 0; border-top: 1px solid #4a4943; margin: 40px 0 28px; }
+        .site-footer .legal { font-size: 10px; letter-spacing: .06em; text-transform: uppercase; margin: 0; }
+
+        /* ---------- Base ---------- */
+        .member-page { --paper: #f4f1e9; --ink: #191919; --red: #d9361e; background: var(--paper); color: var(--ink); font: 14px/1.6 'IBM Plex Mono', monospace; color-scheme: light; margin: 0; }
+        .member-page * { box-sizing: border-box; }
+        .member-page [hidden] { display: none !important; }
+        .member-page a { color: inherit; text-decoration: none; }
+        .member-page button { cursor: pointer; font: inherit; }
+        .member-page button:disabled { cursor: wait; opacity: .55; }
+        .member-page :focus-visible { outline: 2px solid var(--red); outline-offset: 4px; }
+
+        /* ---------- Typography ---------- */
+        .member-page h1,
+        .member-page h2,
+        .member-page .sidebar-name,
+        .member-page .delivery-name { font-family: 'Bodoni Moda', Georgia, serif; font-weight: 400; line-height: 1.15; margin: 0; }
+        .member-page h2 { font-size: 40px; margin: 0 0 28px; }
+        .member-page .accent,
+        .member-page [aria-current=page] { color: var(--red); }
+        .member-page .eyebrow { color: var(--red); font-size: 12px; letter-spacing: .03em; }
+
+        /* ---------- Page frame ---------- */
+        .member-page .member-main { max-width: 1800px; margin: auto; padding: 60px 4.5% 75px; min-height: 65vh; }
+        .member-page .member-hero { border-bottom: 1px solid; margin-bottom: 40px; }
+        .member-page .hero-line { display: flex; align-items: flex-end; justify-content: space-between; gap: 32px; margin: 24px 0 40px; }
+        .member-page .hero-line h1 { font-size: clamp(48px, 6vw, 100px); }
+        .member-page .hero-line > p { max-width: 360px; margin: 0 0 5px; }
+        .member-page .account-grid { display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 48px; }
+        .member-page .account-content { min-width: 0; }
+
+        /* ---------- Account sidebar ---------- */
+        .member-page .sidebar-name { font-size: 30px !important; padding-bottom: 24px; border-bottom: 1px solid #c6c1b6; overflow-wrap: anywhere; }
+        .member-page .account-sidebar nav { display: grid; gap: 24px; padding: 24px 0; border-bottom: 1px solid #c6c1b6; margin-bottom: 24px; }
+        .member-page .text-button { border: 0; background: none; padding: 0; color: inherit; }
+        .member-page .text-button:hover { text-decoration: underline; }
+
+        /* ---------- Forms ---------- */
+        .member-page .name-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+        .member-page .field { margin-bottom: 22px; }
+        .member-page .field label { display: block; font-size: 12px; margin-bottom: 8px; }
+        .member-page .field input,
+        .member-page .field textarea { display: block; width: 100%; min-width: 0; border: 1px solid #bdb8ac; border-radius: 0; background: transparent; color: var(--ink); padding: 15px; font: inherit; }
+        .member-page .field textarea { resize: vertical; }
+        .member-page .field [aria-invalid=true] { border-color: var(--red); }
+        .member-page .field-error { color: #ac2513; font-size: 12px; margin: 5px 0 0; }
+        .member-page .field-error:empty { display: none; }
+        .member-page .form-actions { display: flex; gap: 25px; align-items: center; flex-wrap: wrap; }
+        .member-page .form-actions > a { font-size: 12px; }
+        .member-page .primary-button { border: 1px solid var(--red); background: var(--red); color: #fff; padding: 16px 23px; display: inline-flex; gap: 28px; justify-content: space-between; }
+        .member-page .primary-button:hover { background: #bc2c17; }
+        .member-page .form-status { min-height: 1.5em; font-size: 12px; margin: 16px 0 0; overflow-wrap: anywhere; }
+        .member-page .form-status[data-failed=true] { color: #ac2513; }
+
+        /* ---------- Member information ---------- */
+        .member-page .details-grid { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(260px, 1fr); gap: 40px; border-bottom: 1px solid; padding-bottom: 40px; }
+        .member-page .delivery-card { border: 1px solid; padding: 24px; align-self: start; scroll-margin-top: 25px; }
+        .member-page .delivery-card form { margin-top: 24px; }
+        .member-page .card-heading { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 24px; }
+        .member-page .card-heading h3 { font: 12px 'IBM Plex Mono', monospace; margin: 0; }
+        .member-page .delivery-name { font-size: 32px !important; margin-bottom: 20px !important; overflow-wrap: anywhere; }
+        .member-page .delivery-address { white-space: pre-wrap; overflow-wrap: anywhere; }
+        .member-page .delivery-note { border-top: 1px solid #c6c1b6; padding-top: 22px; margin-top: 25px; color: #716d63; font-size: 12px; }
+
+        /* ---------- Favorites ---------- */
+        .member-page .favorites-status:empty { display: none; }
+        .member-page .favorite-section { margin-bottom: 55px; }
+        .member-page .section-heading { display: flex; align-items: baseline; gap: 20px; border-bottom: 1px solid; padding-bottom: 24px; }
+        .member-page .section-heading h1 { font-size: 46px; }
+        .member-page .saved-count { font-size: 11px; color: #716d63; }
+        .member-page .empty-state { padding: 35px 0; color: #716d63; }
+        .member-page .favorite-row { padding: 30px 0; border-bottom: 1px solid #c6c1b6; display: grid; grid-template-columns: minmax(180px, 1fr) minmax(240px, 1.4fr); gap: 30px; }
+        .member-page .favorite-info h2 { margin: 12px 0 20px; font-size: 36px; overflow-wrap: anywhere; }
+        .member-page .favorite-actions { display: flex; gap: 30px; font-size: 12px; margin-top: 22px; }
+        .member-page .catalog-count,
+        .member-page .no-books { font-size: 12px; color: #716d63; }
+        .member-page .favorite-books { display: flex; gap: 20px; flex-wrap: wrap; }
+        .member-page .favorite-book { display: grid; grid-template-columns: 100px minmax(0, 1fr); gap: 18px; flex: 1; min-width: 210px; align-items: center; }
+        .member-page .favorite-book:nth-child(even) .book-cover { background: #c8cfbd; border-color: #a2ae91; }
+        .member-page .favorite-book h3 { font-size: 14px; line-height: 1.4; margin: 0 0 9px; overflow-wrap: anywhere; }
+        .member-page .favorite-book p,
+        .member-page .book-link { font-size: 10px; }
+        .member-page .book-link { display: inline-block; margin-top: 10px; }
+        .member-page .book-cover { height: 145px; padding: 12px; background: #ddd6c5; border-left: 5px solid #b7ad92; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; }
+        .member-page .book-cover strong { font: 19px/1.1 Georgia, serif; overflow-wrap: anywhere; }
+        .member-page .book-cover span { font-size: 7px; line-height: 1.4; }
+
+        /* ---------- Member area: responsive ---------- */
+        @media (min-width: 1500px) {
+            .member-page .account-grid { grid-template-columns: 250px minmax(0, 1fr); gap: 65px; }
+            .member-page .details-grid { gap: 50px; }
+            .member-page .member-main { padding-top: 65px; }
+        }
+
+        @media (max-width: 1100px) {
+            .member-page .account-grid { grid-template-columns: 180px minmax(0, 1fr); gap: 30px; }
+            .member-page .details-grid { grid-template-columns: 1fr; }
+            .member-page .delivery-card { max-width: 560px; }
+            .member-page .favorite-row { grid-template-columns: 1fr; }
+            .member-page .hero-line > p { max-width: 280px; }
+        }
+
+        @media (max-width: 650px) {
+            .member-page .member-main { padding: 30px 5% 45px; }
+            .member-page .hero-line { display: block; margin-bottom: 28px; }
+            .member-page .hero-line > p { margin-top: 20px; max-width: none; font-size: 12px; }
+            .member-page .account-grid { grid-template-columns: 1fr; gap: 30px; }
+            .member-page .sidebar-name { font-size: 24px !important; padding-bottom: 14px; }
+            .member-page .account-sidebar nav { display: flex; flex-wrap: wrap; gap: 14px 22px; padding: 16px 0; margin-bottom: 12px; font-size: 11px; }
+            .member-page .account-sidebar > form { font-size: 11px; }
+            .member-page .name-fields { grid-template-columns: 1fr; gap: 0; }
+            .member-page .details-grid { gap: 25px; }
+            .member-page h2 { font-size: 34px; }
+            .member-page .section-heading { gap: 12px; }
+            .member-page .section-heading h1 { font-size: 36px; }
+            .member-page .delivery-card { padding: 20px; }
+            .member-page .favorite-actions { justify-content: space-between; }
+            .member-page .favorite-book { min-width: 100%; }
         }
     </style>
-</head>
-<body>
-    <div class="topbar">
-        <div class="wrap">Independent books. Uncommon perspectives.</div>
-    </div>
 
-    <header class="site-header">
-        <div class="wrap">
-            <a href="{{ url('/') }}" class="brand">MARGIN <sup>&reg;</sup></a>
-            <nav class="site-nav">
-                <a href="{{ url('/') }}">Home</a>
-                <a href="#">Books</a>
-                <a href="#">Our story</a>
-            </nav>
-            <div class="site-user">
-                @auth
-                    <span>{{ auth()->user()->name }} &#8599;</span>
-                    <a href="{{ route('cart.index') }}" class="bag">Bag ({{ auth()->user()->cartItems->sum('quantity') }})</a>
-                @endauth
-            </div>
+    @stack('head')
+</head>
+<body class="@yield('body-class')">
+
+    <div class="top-banner">INDEPENDENT BOOKS. UNCOMMON PERSPECTIVES.</div>
+
+    <header class="header">
+        <a href="{{ url('/') }}" class="header-logo">MARGIN<sup>®</sup></a>
+
+        <nav class="nav-links">
+            <a href="{{ url('/') }}" class="{{ request()->is('/') ? 'active' : '' }}">Home</a>
+            <a href="#">Books</a>
+            <a href="#">Our story</a>
+        </nav>
+
+        <div class="header-right">
+            @guest
+                <a href="{{ url('/login') }}">Log in / Register</a>
+            @else
+                <a href="{{ url('/dashboard') }}">{{ auth()->user()->name }}</a>
+            @endguest
+            <a href="{{ Route::has('cart.index') ? route('cart.index') : '#' }}">Bag</a>
         </div>
     </header>
 
-    <div class="steps">
-        <div class="wrap">
-            <div class="steps-list">
-                <span>@yield('step-1', '01 / Bag')</span>
-                <span>@yield('step-2', '02 / Checkout')</span>
-                <span>@yield('step-3', '03 / Confirmation')</span>
-            </div>
-            @auth
-                <span class="signed-in">&#10003; Signed in as {{ auth()->user()->name }}</span>
-            @endauth
+    {{-- Step indicator: the page's own section replaces the muted default with an accent-coloured label --}}
+    @unless (View::hasSection('no-steps'))
+        <div class="steps">
+            <span>@hasSection('step-1') @yield('step-1') @else 01 / Bag @endif</span>
+            <span>@hasSection('step-2') @yield('step-2') @else 02 / Checkout @endif</span>
+            <span>@hasSection('step-3') @yield('step-3') @else 03 / Confirmation @endif</span>
         </div>
-    </div>
+    @endunless
 
-    <main class="wrap" style="padding-bottom: 64px;">
+    @yield('hero')
+
+    <main class="@yield('main-class', 'shop-main')">
         @yield('content')
     </main>
+
+    <footer class="site-footer">
+        <div class="wrap">
+            <div class="brand-lg">MARGIN <span class="reg" aria-hidden="true">R</span></div>
+            <p>For the curious. For the unhurried.<br>A little room for a different point of view.</p>
+            <hr>
+            <p class="legal">&copy; {{ date('Y') }} Margin Books. Read outside the lines.</p>
+        </div>
+    </footer>
+
+    @stack('scripts')
 </body>
 </html>

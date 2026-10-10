@@ -1,6 +1,7 @@
-@extends('layouts.margin')
+@extends('layouts.shop')
 
 @section('title', 'Create an account | Margin')
+@section('no-steps', '1')
 
 @section('content')
     @include('auth._assets')

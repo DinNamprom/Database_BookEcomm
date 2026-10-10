@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Book extends Model
 {
-    public $timestamps = false;
-
     protected function casts(): array
     {
         return ['price' => 'decimal:2'];
@@ -54,7 +52,6 @@ class Book extends Model
     {
         return $this->belongsTo(Publisher::class);
     }
-}
 
     public function reviews()
     {

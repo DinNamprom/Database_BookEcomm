@@ -7,11 +7,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Publisher extends Model
 {
-    public $timestamps = false;
-
     protected $fillable = ['name'];
 
-    /** @return HasMany<Book, $this> */
+    public $timestamps = false;
+
     public function books(): HasMany
     {
         return $this->hasMany(Book::class);

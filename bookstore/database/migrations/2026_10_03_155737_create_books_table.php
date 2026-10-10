@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('genre')->nullable();
-            $table->decimal('price', places:2);
+            $table->decimal('price', places: 2);
             $table->text('description')->nullable();
             $table->foreignId('publisher_id')->constrained()->restrictOnDelete();
             $table->foreignId('author_id')->constrained()->restrictOnDelete();

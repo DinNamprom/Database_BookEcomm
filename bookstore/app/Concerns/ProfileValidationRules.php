@@ -18,6 +18,7 @@ trait ProfileValidationRules
         return [
             'name' => $this->nameRules(),
             'email' => $this->emailRules($userId),
+            'address' => ['nullable', 'string', 'max:500'],
         ];
     }
 

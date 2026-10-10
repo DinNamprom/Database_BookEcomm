@@ -11,7 +11,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/books/{book:slug}', [BookController::class, 'show'])
     ->name('books.show');
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::view('dashboard', 'dashboard')->name('dashboard');
 });
 
@@ -23,8 +23,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
-    Route::get('/checkout/confirmation/{shipping}', [CheckoutController::class, 'confirmation'])
-        ->name('checkout.confirmation');
+    Route::get('/checkout/confirmation/{shipping}', [CheckoutController::class, 'confirmation'])->name('checkout.confirmation');
 });
 
 require __DIR__.'/settings.php';

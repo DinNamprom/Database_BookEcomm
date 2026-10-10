@@ -14,6 +14,7 @@ use Illuminate\Support\Str;
 use Laravel\Fortify\Contracts\PasskeyUser;
 use Laravel\Fortify\PasskeyAuthenticatable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
+use App\Models\CartItem;
 
 /**
  * @property int $id
@@ -58,5 +59,20 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
         return Str::length($initials) > 1
             ? Str::substr($initials, 0, 1).Str::substr($initials, -1)
             : $initials;
+    }
+
+    public function cartItems()
+    {
+        return $this->hasMany(CartItem::class);
+    }
+
+    public function cart()
+    {
+        return $this->hasOne(Cart::class);
+    }
+
+    public function shippings()
+    {
+        return $this->hasMany(Shipping::class);
     }
 }

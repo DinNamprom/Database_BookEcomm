@@ -3,13 +3,34 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Book extends Model
 {
     public $timestamps = false;
+
+    protected function casts(): array
+    {
+        return ['price' => 'decimal:2'];
+    }
+
+    /** @return BelongsTo<Author, $this> */
+    public $timestamps = false; // Existing migration didn't have timestamps
+
     protected $fillable = [
-        'title', 'genre', 'price', 'description',
-        'publisher_id', 'author_id', 'in_stock', 'publish_date', 'format',
+        'title',
+        'slug',
+        'genre',
+        'price',
+        'description',
+        'publisher_id',
+        'author_id',
+        'in_stock',
+        'publish_date',
+        'format',
+        'cover_image',
+        'cover_bg_color',
+        'is_featured',
     ];
 
     protected $casts = [
@@ -18,15 +39,22 @@ class Book extends Model
         'publish_date' => 'date',
     ];
 
-    public function author()
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+
+    public function author(): BelongsTo
     {
         return $this->belongsTo(Author::class);
     }
 
-    public function publisher()
+    /** @return BelongsTo<Publisher, $this> */
+    public function publisher(): BelongsTo
     {
         return $this->belongsTo(Publisher::class);
     }
+}
 
     public function reviews()
     {

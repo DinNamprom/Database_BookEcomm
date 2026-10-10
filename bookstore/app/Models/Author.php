@@ -3,19 +3,21 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Author extends Model
 {
-    public $timestamps = false;
     protected $fillable = ['first_name', 'last_name'];
 
-    public function books()
-    {
-        return $this->hasMany(Book::class);
-    }
+    public $timestamps = false;
 
     public function getFullNameAttribute(): string
     {
-        return trim("{$this->first_name} {$this->last_name}");
+        return "{$this->first_name} {$this->last_name}";
+    }
+
+    public function books(): HasMany
+    {
+        return $this->hasMany(Book::class);
     }
 }

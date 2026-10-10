@@ -7,6 +7,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
@@ -29,12 +30,24 @@ use App\Models\CartItem;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['name', 'email', 'password'])]
+#[Fillable(['name', 'email', 'password', 'first_name', 'last_name', 'address'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, PasskeyAuthenticatable, TwoFactorAuthenticatable;
+
+    /** @return BelongsToMany<Author, $this> */
+    public function favoriteAuthors(): BelongsToMany
+    {
+        return $this->belongsToMany(Author::class, 'favorite_authors');
+    }
+
+    /** @return BelongsToMany<Publisher, $this> */
+    public function favoritePublishers(): BelongsToMany
+    {
+        return $this->belongsToMany(Publisher::class, 'favorite_publishers');
+    }
 
     /**
      * Get the attributes that should be cast.

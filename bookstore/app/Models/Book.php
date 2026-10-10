@@ -7,6 +7,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Book extends Model
 {
+    public $timestamps = false;
+
+    protected function casts(): array
+    {
+        return ['price' => 'decimal:2'];
+    }
+
+    /** @return BelongsTo<Author, $this> */
     public $timestamps = false; // Existing migration didn't have timestamps
 
     protected $fillable = [
@@ -41,10 +49,12 @@ class Book extends Model
         return $this->belongsTo(Author::class);
     }
 
+    /** @return BelongsTo<Publisher, $this> */
     public function publisher(): BelongsTo
     {
         return $this->belongsTo(Publisher::class);
     }
+}
 
     public function reviews()
     {

@@ -270,7 +270,10 @@
 
         <div class="header-right">
             @guest
-                <a href="{{ url('/login') }}">Log in / Register</a>
+                <span>
+                    <a href="{{ url('/login') }}">Log in</a> /
+                    <a href="{{ url('/register') }}">Register</a>
+                </span>
             @else
                 <a href="{{ url('/dashboard') }}">{{ auth()->user()->name }}</a>
             @endguest

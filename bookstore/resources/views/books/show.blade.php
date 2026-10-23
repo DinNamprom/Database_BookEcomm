@@ -11,19 +11,60 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const homeUrl = @json(route('home'));
-    const loginUrl = @json(route('login'));
     document.getElementById('backToCollection')?.addEventListener('click', () => {
         window.location.href = homeUrl;
     });
     document.getElementById('browseAllBooks')?.addEventListener('click', () => {
         window.location.href = homeUrl;
     });
-    document.getElementById('loginButton')?.addEventListener('click', () => {
-        window.location.href = loginUrl;
+
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+    const favoriteStatus = document.getElementById('bookDetailFavoriteStatus');
+    document.querySelectorAll('[data-favorite-toggle]').forEach(button => {
+        button.addEventListener('click', async () => {
+            const wasSaved = button.dataset.saved === 'true';
+            const url = wasSaved ? button.dataset.removeUrl : button.dataset.saveUrl;
+            const originalLabel = button.querySelector('[data-favorite-label]')?.textContent;
+
+            button.disabled = true;
+            if (favoriteStatus) favoriteStatus.textContent = '';
+
+            try {
+                const response = await fetch(url, {
+                    method: wasSaved ? 'DELETE' : 'PUT',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': csrfToken,
+                    },
+                    credentials: 'same-origin',
+                });
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok || typeof data.saved !== 'boolean') throw new Error('Favorite request failed');
+
+                const saved = data.saved;
+                const label = button.querySelector('[data-favorite-label]');
+                const icon = button.querySelector('[data-favorite-icon]');
+                button.dataset.saved = String(saved);
+                button.setAttribute('aria-pressed', String(saved));
+                button.classList.toggle('is-saved', saved);
+                if (label) label.textContent = saved ? 'Saved' : button.dataset.saveLabel;
+                if (icon) icon.textContent = saved ? '♥' : '♡';
+                if (favoriteStatus) favoriteStatus.textContent = saved
+                    ? `${button.dataset.favoriteName} saved to your favorites.`
+                    : `${button.dataset.favoriteName} removed from your favorites.`;
+            } catch (error) {
+                if (favoriteStatus) favoriteStatus.textContent = `Could not update ${button.dataset.favoriteName}. Please try again.`;
+                console.error('Favorite update failed:', error);
+            } finally {
+                button.disabled = false;
+                if (originalLabel && !button.querySelector('[data-favorite-label]')?.textContent) {
+                    button.querySelector('[data-favorite-label]').textContent = originalLabel;
+                }
+            }
+        });
     });
-    document.getElementById('saveBookButton')?.addEventListener('click', () => {
-        window.location.href = loginUrl;
-    });
+
     // Submit Add to Bag in the background so the user stays on Book Detail.
     const addForm = document.querySelector('.book-detail__add-form');
     const addButton = addForm?.querySelector('button[type="submit"]');
@@ -170,14 +211,46 @@ document.addEventListener('DOMContentLoaded', function () {
             </h2>
             {{-- Author / Publisher --}}
             <div class="book-detail__metadata">
-                <p>
-                    By {{ $book->author?->full_name ?? 'Unknown author' }} ↗
-                </p>
-                <p class="book-detail__metadata-publisher">
-                    Published by
-                    {{ $book->publisher?->name ?? 'Unknown publisher' }}
-                    ↗
-                </p>
+                @if ($book->author)
+                    <p class="book-detail__metadata-row">
+                        <span>By {{ $book->author->full_name }} ↗</span>
+                        @auth
+                            <button type="button" class="book-detail__favorite-toggle @if($favoriteStates['author']) is-saved @endif"
+                                    data-favorite-toggle
+                                    data-favorite-name="Author"
+                                    data-save-label="Save author"
+                                    data-save-url="{{ route('favorites.authors.save', ['author' => $book->author->id]) }}"
+                                    data-remove-url="{{ route('favorites.authors.remove', ['author' => $book->author->id]) }}"
+                                    data-saved="{{ $favoriteStates['author'] ? 'true' : 'false' }}"
+                                    aria-pressed="{{ $favoriteStates['author'] ? 'true' : 'false' }}">
+                                <span data-favorite-icon>{{ $favoriteStates['author'] ? '♥' : '♡' }}</span>
+                                <span data-favorite-label>{{ $favoriteStates['author'] ? 'Saved' : 'Save author' }}</span>
+                            </button>
+                        @endauth
+                    </p>
+                @else
+                    <p>By Unknown author</p>
+                @endif
+                @if ($book->publisher)
+                    <p class="book-detail__metadata-publisher book-detail__metadata-row">
+                        <span>Published by {{ $book->publisher->name }} ↗</span>
+                        @auth
+                            <button type="button" class="book-detail__favorite-toggle @if($favoriteStates['publisher']) is-saved @endif"
+                                    data-favorite-toggle
+                                    data-favorite-name="Publisher"
+                                    data-save-label="Save publisher"
+                                    data-save-url="{{ route('favorites.publishers.save', ['publisher' => $book->publisher->id]) }}"
+                                    data-remove-url="{{ route('favorites.publishers.remove', ['publisher' => $book->publisher->id]) }}"
+                                    data-saved="{{ $favoriteStates['publisher'] ? 'true' : 'false' }}"
+                                    aria-pressed="{{ $favoriteStates['publisher'] ? 'true' : 'false' }}">
+                                <span data-favorite-icon>{{ $favoriteStates['publisher'] ? '♥' : '♡' }}</span>
+                                <span data-favorite-label>{{ $favoriteStates['publisher'] ? 'Saved' : 'Save publisher' }}</span>
+                            </button>
+                        @endauth
+                    </p>
+                @else
+                    <p class="book-detail__metadata-publisher">Published by Unknown publisher</p>
+                @endif
             </div>
             <div class="book-detail__divider book-detail__info-divider"></div>
             {{-- Price / Stock --}}
@@ -231,28 +304,46 @@ document.addEventListener('DOMContentLoaded', function () {
                     </form>
                     <p class="book-detail__bag-status" id="bookDetailBagStatus" role="status" aria-live="polite"></p>
                 @else
-                    <a href="{{ route('login') }}" class="book-detail__add-button">
+                    <a href="{{ route('books.purchase.login', ['book' => $book->slug]) }}" class="book-detail__add-button">
                         <span class="book-detail__add-label">Log in to add to bag</span>
                         <span class="book-detail__add-arrow">↗</span>
                     </a>
                 @endauth
             </div>
+            @auth
+                <div class="book-detail__favorite-book-row">
+                    <button type="button" class="book-detail__favorite-toggle book-detail__favorite-toggle--book @if($favoriteStates['book']) is-saved @endif"
+                            data-favorite-toggle
+                            data-favorite-name="Book"
+                            data-save-label="Save book"
+                            data-save-url="{{ route('favorites.books.save', ['book' => $book->slug]) }}"
+                            data-remove-url="{{ route('favorites.books.remove', ['book' => $book->slug]) }}"
+                            data-saved="{{ $favoriteStates['book'] ? 'true' : 'false' }}"
+                            aria-pressed="{{ $favoriteStates['book'] ? 'true' : 'false' }}">
+                        <span data-favorite-icon>{{ $favoriteStates['book'] ? '♥' : '♡' }}</span>
+                        <span data-favorite-label>{{ $favoriteStates['book'] ? 'Saved' : 'Save book' }}</span>
+                    </button>
+                    <p class="book-detail__favorite-status" id="bookDetailFavoriteStatus" role="status" aria-live="polite"></p>
+                </div>
+            @endauth
             {{-- Login / Save message --}}
+            @guest
             <div class="book-detail__login-note">
                 <p>
                     Please log in or create an account before adding books
                     and placing an order. Your selection will be here.
                 </p>
                 <div class="book-detail__login-links">
-                    <button type="button" class="book-detail__login-link" id="loginButton">
+                    <a href="{{ route('books.purchase.login', ['book' => $book->slug]) }}" class="book-detail__login-link">
                         Log in / Register ↗
-                    </button>
-                    <button type="button" class="book-detail__save" id="saveBookButton">
+                    </a>
+                    <a href="{{ route('books.purchase.login', ['book' => $book->slug]) }}" class="book-detail__save">
                         <span class="book-detail__save-icon">♡</span>
                         <span class="book-detail__save-label">Save book · Log in</span>
-                    </button>
+                    </a>
                 </div>
             </div>
+            @endguest
             <div class="book-detail__divider book-detail__info-divider"></div>
         </div>
     </section>

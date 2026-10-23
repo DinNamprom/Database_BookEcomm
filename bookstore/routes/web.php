@@ -21,8 +21,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
     Route::get('/checkout/confirmation/{shipping}', [CheckoutController::class, 'confirmation'])->name('checkout.confirmation');
-    Route::get('/books/{book:slug}', [BookController::class, 'show'])->name('books.show');
 });
+
+Route::get('/books/{book:slug}/login', [BookController::class, 'beginPurchase'])
+    ->name('books.purchase.login');
+Route::get('/books/{book:slug}', [BookController::class, 'show'])->name('books.show');
 
 require __DIR__.'/settings.php';
 require __DIR__.'/member-pages.php';

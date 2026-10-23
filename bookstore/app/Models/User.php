@@ -37,6 +37,12 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, PasskeyAuthenticatable, TwoFactorAuthenticatable;
 
+    /** @return BelongsToMany<Book, $this> */
+    public function favoriteBooks(): BelongsToMany
+    {
+        return $this->belongsToMany(Book::class, 'wishlists');
+    }
+
     /** @return BelongsToMany<Author, $this> */
     public function favoriteAuthors(): BelongsToMany
     {

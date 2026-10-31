@@ -577,6 +577,11 @@ cursor: pointer;
 
 }
 
+/* Fix: Keep Add to Bag text visible for guest links */
+.book-page a.book-detail__add-button {
+    color: var(--book-paper);
+}
+
 .book-detail__add-label {
 overflow: hidden;
 

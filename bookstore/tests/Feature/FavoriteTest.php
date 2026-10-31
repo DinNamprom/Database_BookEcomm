@@ -66,12 +66,12 @@ class FavoriteTest extends TestCase
         $user->favoriteAuthors()->attach($author);
         $other->favoriteAuthors()->attach($author);
 
-        $this->actingAs($user)->deleteJson(route('favorites.authors.remove', $author->id))->assertNoContent();
+        $this->actingAs($user)->deleteJson(route('favorites.authors.remove', $author->id))->assertOk()->assertExactJson(['saved' => false]);
         $this->assertDatabaseMissing('favorite_authors', ['user_id' => $user->id, 'author_id' => $author->id]);
         $this->assertDatabaseHas('favorite_authors', ['user_id' => $other->id, 'author_id' => $author->id]);
         $this->assertDatabaseHas('authors', ['id' => $author->id]);
         $this->getJson(route('favorites.data'))->assertJsonPath('authors_count', 0);
-        $this->deleteJson(route('favorites.authors.remove', $author->id))->assertNoContent();
+        $this->deleteJson(route('favorites.authors.remove', $author->id))->assertOk()->assertExactJson(['saved' => false]);
     }
 
     public function test_removing_a_publisher_does_not_remove_another_members_relationship(): void
@@ -81,10 +81,10 @@ class FavoriteTest extends TestCase
         $publisher = Publisher::create(['name' => 'Shared Publisher']);
         $other->favoritePublishers()->attach($publisher);
 
-        $this->actingAs($user)->deleteJson(route('favorites.publishers.remove', $publisher->id))->assertNoContent();
+        $this->actingAs($user)->deleteJson(route('favorites.publishers.remove', $publisher->id))->assertOk()->assertExactJson(['saved' => false]);
         $this->assertDatabaseHas('favorite_publishers', ['user_id' => $other->id, 'publisher_id' => $publisher->id]);
         $user->favoritePublishers()->attach($publisher);
-        $this->deleteJson(route('favorites.publishers.remove', $publisher->id))->assertNoContent();
+        $this->deleteJson(route('favorites.publishers.remove', $publisher->id))->assertOk()->assertExactJson(['saved' => false]);
         $this->assertDatabaseMissing('favorite_publishers', ['user_id' => $user->id, 'publisher_id' => $publisher->id]);
         $this->assertDatabaseHas('publishers', ['id' => $publisher->id]);
     }

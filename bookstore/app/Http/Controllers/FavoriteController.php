@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Author;
+use App\Models\Book;
+use App\Models\Publisher;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\View\View;
 
 class FavoriteController extends Controller
@@ -41,17 +43,45 @@ class FavoriteController extends Controller
         ]);
     }
 
-    public function removeAuthor(Request $request, int $author): Response
+    public function saveBook(Request $request, Book $book): JsonResponse
     {
-        $request->user()->favoriteAuthors()->detach($author);
+        $request->user()->favoriteBooks()->syncWithoutDetaching([$book->id]);
 
-        return response()->noContent();
+        return response()->json(['saved' => true]);
     }
 
-    public function removePublisher(Request $request, int $publisher): Response
+    public function removeBook(Request $request, Book $book): JsonResponse
     {
-        $request->user()->favoritePublishers()->detach($publisher);
+        $request->user()->favoriteBooks()->detach($book->id);
 
-        return response()->noContent();
+        return response()->json(['saved' => false]);
+    }
+
+    public function saveAuthor(Request $request, Author $author): JsonResponse
+    {
+        $request->user()->favoriteAuthors()->syncWithoutDetaching([$author->id]);
+
+        return response()->json(['saved' => true]);
+    }
+
+    public function removeAuthor(Request $request, Author $author): JsonResponse
+    {
+        $request->user()->favoriteAuthors()->detach($author->id);
+
+        return response()->json(['saved' => false]);
+    }
+
+    public function savePublisher(Request $request, Publisher $publisher): JsonResponse
+    {
+        $request->user()->favoritePublishers()->syncWithoutDetaching([$publisher->id]);
+
+        return response()->json(['saved' => true]);
+    }
+
+    public function removePublisher(Request $request, Publisher $publisher): JsonResponse
+    {
+        $request->user()->favoritePublishers()->detach($publisher->id);
+
+        return response()->json(['saved' => false]);
     }
 }

@@ -50,7 +50,12 @@
                            value="{{ old('email') }}" placeholder="alex.morgan@email.com" autocomplete="email" required>
                     @error('email') <p class="error">{{ $message }}</p> @enderror
                 </div>
-
+                <div class="field">
+                    <label for="phone_number">Phone number *</label>
+                    <input id="phone_number" name="phone_number" type="tel" class="input @error('phone_number') is-invalid @enderror"
+                           value="{{ old('phone_number') }}" placeholder="0812345678" autocomplete="tel" required>
+                    @error('phone_number') <p class="error">{{ $message }}</p> @enderror
+                </div>
                 <div class="field">
                     <label for="password">Password *</label>
                     <div class="input-wrap">

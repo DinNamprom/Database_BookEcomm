@@ -30,12 +30,18 @@ use App\Models\CartItem;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['name', 'email', 'password', 'first_name', 'last_name', 'address'])]
+#[Fillable(['name', 'email', 'password', 'first_name', 'last_name', 'address', 'phone_number'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, PasskeyAuthenticatable, TwoFactorAuthenticatable;
+
+    /** @return BelongsToMany<Book, $this> */
+    public function favoriteBooks(): BelongsToMany
+    {
+        return $this->belongsToMany(Book::class, 'wishlists');
+    }
 
     /** @return BelongsToMany<Author, $this> */
     public function favoriteAuthors(): BelongsToMany

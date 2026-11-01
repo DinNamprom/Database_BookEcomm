@@ -47,9 +47,17 @@
                 }
 
                 if (kind === 'address') {
-                    const text = data.address ?? form.querySelector('[name="address"]').value;
-                    document.querySelector('[data-delivery-address]').textContent = text || 'No delivery address saved yet.';
-                    form.querySelector('[name="address"]').value = text;
+                    document.querySelector('[data-delivery-address]').textContent = data.address || 'No delivery address saved yet.';
+                    Object.entries(data.delivery_address || {}).forEach(([name, value]) => {
+                        const input = form.elements.namedItem(name);
+                        if (input) input.value = input.defaultValue = value ?? '';
+                    });
+                    form.querySelector('fieldset').disabled = true;
+                    form.querySelector('[data-address-actions]').hidden = true;
+                    form.querySelector('[data-cancel-address]').hidden = false;
+                    const edit = document.querySelector('[data-edit-address]');
+                    edit.hidden = false;
+                    edit.setAttribute('aria-expanded', 'false');
                 }
             } catch (err) {
                 status.textContent = 'Something went wrong. Please try again.';
@@ -59,6 +67,29 @@
             }
         });
     });
+
+    // ----- Edit the prefilled delivery address -----
+    const addressForm = document.getElementById('address-editor');
+    const editAddress = document.querySelector('[data-edit-address]');
+    if (addressForm && editAddress) {
+        editAddress.addEventListener('click', function () {
+            addressForm.querySelector('fieldset').disabled = false;
+            addressForm.querySelector('[data-address-actions]').hidden = false;
+            editAddress.hidden = true;
+            editAddress.setAttribute('aria-expanded', 'true');
+            addressForm.querySelector('input[name="street_address"]')?.focus();
+        });
+        addressForm.querySelector('[data-cancel-address]')?.addEventListener('click', function () {
+            addressForm.reset();
+            addressForm.querySelector('fieldset').disabled = true;
+            addressForm.querySelector('[data-address-actions]').hidden = true;
+            addressForm.querySelectorAll('[data-error]').forEach(el => el.textContent = '');
+            addressForm.querySelectorAll('[aria-invalid]').forEach(el => el.removeAttribute('aria-invalid'));
+            addressForm.querySelector('.form-status').textContent = '';
+            editAddress.hidden = false;
+            editAddress.setAttribute('aria-expanded', 'false');
+        });
+    }
 
     // ----- Remove a favorite -----
     document.querySelectorAll('[data-remove-favorite]').forEach(function (btn) {

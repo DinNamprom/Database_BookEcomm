@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 // Session-authenticated data/actions for Favorite and Member Information.
 Route::middleware('auth')->group(function () {
     Route::get('favorites', [FavoriteController::class, 'page'])->name('favorites.index');
+    Route::get('wishlist', [FavoriteController::class, 'wishlist'])->name('wishlist.index');
     Route::view('member-information', 'member.information')->name('member-information.index');
 
     Route::get('favorites/data', [FavoriteController::class, 'index'])->name('favorites.data');

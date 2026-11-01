@@ -16,6 +16,14 @@ class FavoriteController extends Controller
         return view('member.favorites', $this->index($request)->getData(true));
     }
 
+    public function wishlist(Request $request): View
+    {
+        $books = $request->user()->favoriteBooks()
+            ->with(['author', 'publisher'])->orderBy('books.title')->get();
+
+        return view('member.wishlist', ['books' => $books]);
+    }
+
     public function index(Request $request): JsonResponse
     {
         $bookColumns = ['id', 'title', 'format', 'price', 'author_id', 'publisher_id'];

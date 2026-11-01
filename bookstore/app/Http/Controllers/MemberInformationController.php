@@ -20,6 +20,7 @@ class MemberInformationController extends Controller
             'first_name' => $user->first_name,
             'last_name' => $user->last_name,
             'email' => $user->email,
+            'phone_number' => $user->phone_number,
             'address' => $user->address,
         ]);
     }
@@ -31,6 +32,7 @@ class MemberInformationController extends Controller
             'first_name' => ['required', 'string', 'max:100'],
             'last_name' => ['required', 'string', 'max:100'],
             'email' => $this->emailRules($user->id),
+            'phone_number' => ['sometimes', 'nullable', 'string', 'regex:/^[0-9+\-\s]{8,20}$/'],
         ]);
 
         $user->fill($validated);

@@ -88,6 +88,9 @@
         .catalog-section .book-meta { font-size: 0.8rem; text-transform: uppercase; color: #666; margin-bottom: 0.5rem; }
         .home-section .book-title,
         .catalog-section .book-title { font-family: 'Playfair Display', 'Bodoni Moda', serif; font-size: 1.8rem; margin: 0 0 1rem 0; line-height: 1.2; }
+        .catalog-rating { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 0 14px; font-size: 11px; color: var(--muted); }
+        .catalog-rating-stars { display: inline-block; position: relative; color: var(--accent); font: 20px/1 Georgia, serif; letter-spacing: 2px; white-space: nowrap; }
+        .catalog-rating-fill { position: absolute; top: 0; left: 0; overflow: hidden; }
         .catalog-section .book-title a { color: inherit; text-decoration: none; }
         .home-section .book-author-info,
         .catalog-section .book-author-info { font-size: 0.9rem; margin-bottom: 0.2rem; }

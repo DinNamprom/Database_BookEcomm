@@ -30,19 +30,20 @@
                             <div class="field"><label for="last_name">LAST NAME</label><input id="last_name" name="last_name" autocomplete="family-name" maxlength="100" required value="{{ auth()->user()->last_name }}" aria-describedby="last_name-error"><p class="field-error" id="last_name-error" data-error="last_name"></p></div>
                         </div>
                         <div class="field"><label for="email">EMAIL ADDRESS</label><input type="email" id="email" name="email" autocomplete="email" required value="{{ auth()->user()->email }}" aria-describedby="email-error"><p class="field-error" id="email-error" data-error="email"></p></div>
+                        <div class="field"><label for="phone_number">PHONE NUMBER</label><input type="tel" id="phone_number" name="phone_number" autocomplete="tel" maxlength="20" value="{{ auth()->user()->phone_number }}" aria-describedby="phone_number-error"><p class="field-error" id="phone_number-error" data-error="phone_number"></p></div>
                         <div class="form-actions"><button class="primary-button" type="submit">Save changes <span>↗</span></button><a href="{{ route('security.edit') }}">Change password ↗</a></div>
                         <p class="form-status" role="status" aria-live="polite"></p>
                     </form>
                 </section>
 
                 <section id="delivery" class="delivery-card" aria-labelledby="delivery-heading">
-                    <div class="card-heading"><h3 id="delivery-heading">DEFAULT DELIVERY</h3><button class="text-button accent" type="button" data-edit-address aria-expanded="false" aria-controls="address-editor">Edit ↗</button></div>
+                    <div class="card-heading"><h3 id="delivery-heading">DEFAULT DELIVERY</h3></div>
                     <p class="delivery-name" data-member-name>{{ auth()->user()->name }}</p>
                     <p class="delivery-address" data-delivery-address>{{ auth()->user()->address ?: 'No delivery address saved yet.' }}</p>
-                    <form id="address-editor" data-member-form="address" action="{{ route('member-information.address.update') }}" method="POST" hidden>
+                    <form id="address-editor" data-member-form="address" action="{{ route('member-information.address.update') }}" method="POST">
                         @csrf @method('PATCH')
                         <div class="field"><label for="address">DELIVERY ADDRESS</label><textarea id="address" name="address" autocomplete="street-address" rows="4" maxlength="2000" required aria-describedby="address-error">{{ auth()->user()->address }}</textarea><p class="field-error" id="address-error" data-error="address"></p></div>
-                        <div class="form-actions"><button class="primary-button" type="submit">Save address ↗</button><button type="button" class="text-button" data-cancel-address>Cancel</button></div>
+                        <div class="form-actions"><button class="primary-button" type="submit">Save address ↗</button></div>
                         <p class="form-status" role="status" aria-live="polite"></p>
                     </form>
                     <p class="delivery-note">Your saved delivery address.</p>

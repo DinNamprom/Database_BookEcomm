@@ -224,6 +224,20 @@ document.addEventListener('DOMContentLoaded', function () {
                                     <a href="{{ route('books.show', ['book' => $book->slug]) }}">{{ $book->title }}</a>
                                 </h3>
 
+                                @php
+                                    $rating = $bookRatings->get($book->id);
+                                    $average = (float) ($rating?->average_rating ?? 0);
+                                @endphp
+                                <div class="catalog-rating">
+                                    <span class="catalog-rating-stars" role="img" aria-label="{{ number_format($average, 1) }} out of 5 stars">
+                                        <span aria-hidden="true">☆☆☆☆☆</span><span class="catalog-rating-fill" style="width: {{ max(0, min(100, $average / 5 * 100)) }}%" aria-hidden="true">★★★★★</span>
+                                    </span>
+                                    @if ($rating)
+                                        <span>{{ number_format($average, 1) }} / 5 · {{ $rating->review_count }} {{ (int) $rating->review_count === 1 ? 'review' : 'reviews' }}</span>
+                                    @else
+                                        <span>No ratings yet</span>
+                                    @endif
+                                </div>
                                 <div class="book-author-info">{{ $book->author?->full_name ?? 'Unknown author' }}</div>
                                 <div class="book-format-stock">
                                     {{ $book->format ?? 'Paperback' }} / {{ $book->in_stock ? 'In stock' : 'Out of stock' }}

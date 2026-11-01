@@ -6,6 +6,7 @@ use App\Models\Book;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class BookController extends Controller
 {
@@ -166,7 +167,13 @@ class BookController extends Controller
 
         $books = $baseQuery->paginate(8)->withQueryString();
 
+        $bookRatings = DB::table('reviews')
+            ->whereIn('book_id', $books->getCollection()->pluck('id'))
+            ->selectRaw('book_id, AVG(rating_star) as average_rating, COUNT(*) as review_count')
+            ->groupBy('book_id')->get()->keyBy('book_id');
+
         return view('books.index', [
+            'bookRatings' => $bookRatings,
             'books' => $books,
             'subjects' => $subjects,
             'totalAllBooks' => $totalMatchingAllSubjects,

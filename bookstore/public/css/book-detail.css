@@ -1165,3 +1165,25 @@ background: #ffffff;
 .book-detail__review-heading h3 { font: inherit; font-weight: 600; }
 .book-detail__review-heading time { font-size: 11px; }
 .book-page .book-detail__review-comment { margin-top: 14px; max-width: 75ch; white-space: pre-wrap; overflow-wrap: anywhere; }
+
+/* Signed-in reader review form */
+.book-detail__review-form { padding: 24px 0 32px; border-top: 1px solid var(--book-rule); }
+.book-detail__review-form-title { font-family: var(--book-font-display); font-size: 28px; font-weight: 400; margin-bottom: 20px; }
+.book-detail__rating-input { border: 0; margin: 0 0 20px; padding: 0; }
+.book-detail__rating-input legend, .book-detail__comment-label { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; }
+.book-detail__rating-options { display: inline-flex; flex-direction: row-reverse; gap: 6px; margin-top: 8px; }
+.book-detail__rating-options input, .book-detail__sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.book-detail__rating-options label { font-family: Georgia, serif; font-size: 30px; color: var(--book-rule); cursor: pointer; }
+.book-detail__rating-options input:checked ~ label,
+.book-detail__rating-options label:hover,
+.book-detail__rating-options label:hover ~ label { color: var(--book-accent); }
+.book-detail__rating-options input:focus-visible + label { outline: 2px solid var(--book-ink); outline-offset: 3px; }
+.book-detail__comment-label { display: block; margin-bottom: 10px; }
+.book-detail__comment-input { display: block; width: 100%; max-width: 75ch; padding: 14px; border: 1px solid var(--book-rule); border-radius: 0; background: transparent; color: var(--book-ink); font: inherit; resize: vertical; }
+.book-detail__comment-input:focus { outline: 1px solid var(--book-ink); border-color: var(--book-ink); }
+.book-detail__review-submit { margin-top: 16px; padding: 12px 24px; border: 1px solid var(--book-ink); background: var(--book-ink); color: var(--book-paper); font: inherit; cursor: pointer; }
+.book-detail__review-submit:hover { background: var(--book-accent); border-color: var(--book-accent); }
+.book-detail__review-submit:focus-visible { outline: 2px solid var(--book-accent); outline-offset: 3px; }
+.book-detail__review-error { color: var(--book-accent); margin: 12px 0; }
+.book-detail__review-success { margin: 12px 0 20px; }
+@media print { .book-detail__review-form { display: none; } }

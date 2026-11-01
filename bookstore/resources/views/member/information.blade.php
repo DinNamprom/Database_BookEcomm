@@ -16,6 +16,10 @@
 @endsection
 
 @section('content')
+    @php
+        $deliveryAddress = auth()->user()->addresses()->orderByDesc('is_default')->orderBy('id')->first();
+        $hasAddress = $deliveryAddress !== null || filled(auth()->user()->address);
+    @endphp
     <div class="account-grid">
         @include('member._sidebar')
 
@@ -37,13 +41,20 @@
                 </section>
 
                 <section id="delivery" class="delivery-card" aria-labelledby="delivery-heading">
-                    <div class="card-heading"><h3 id="delivery-heading">DEFAULT DELIVERY</h3></div>
+                    <div class="card-heading"><h3 id="delivery-heading">DEFAULT DELIVERY</h3><button class="text-button accent" type="button" data-edit-address aria-controls="address-fields" aria-expanded="{{ $hasAddress ? 'false' : 'true' }}" @if(!$hasAddress) hidden @endif>Edit ↗</button></div>
                     <p class="delivery-name" data-member-name>{{ auth()->user()->name }}</p>
-                    <p class="delivery-address" data-delivery-address>{{ auth()->user()->address ?: 'No delivery address saved yet.' }}</p>
+                    <p class="delivery-address" data-delivery-address>{{ $deliveryAddress ? implode(', ', [$deliveryAddress->street_address, $deliveryAddress->city, $deliveryAddress->state, $deliveryAddress->zip_code, $deliveryAddress->country]) : (auth()->user()->address ?: 'No delivery address saved yet.') }}</p>
                     <form id="address-editor" data-member-form="address" action="{{ route('member-information.address.update') }}" method="POST">
                         @csrf @method('PATCH')
-                        <div class="field"><label for="address">DELIVERY ADDRESS</label><textarea id="address" name="address" autocomplete="street-address" rows="4" maxlength="2000" required aria-describedby="address-error">{{ auth()->user()->address }}</textarea><p class="field-error" id="address-error" data-error="address"></p></div>
-                        <div class="form-actions"><button class="primary-button" type="submit">Save address ↗</button></div>
+                        <fieldset class="address-fields" id="address-fields" @disabled($hasAddress)>
+                            <legend class="address-legend">Delivery address</legend>
+                            <div class="field"><label for="street_address">STREET ADDRESS</label><input id="street_address" name="street_address" autocomplete="address-line1" maxlength="255" required value="{{ $deliveryAddress?->street_address ?? auth()->user()->address }}" aria-describedby="street_address-error"><p class="field-error" id="street_address-error" data-error="street_address"></p></div>
+                            <div class="field"><label for="city">CITY / DISTRICT</label><input id="city" name="city" autocomplete="address-level2" maxlength="255" required value="{{ $deliveryAddress?->city }}" aria-describedby="city-error"><p class="field-error" id="city-error" data-error="city"></p></div>
+                            <div class="field"><label for="state">STATE / PROVINCE</label><input id="state" name="state" autocomplete="address-level1" maxlength="255" required value="{{ $deliveryAddress?->state }}" aria-describedby="state-error"><p class="field-error" id="state-error" data-error="state"></p></div>
+                            <div class="field"><label for="zip_code">ZIP / POSTAL CODE</label><input id="zip_code" name="zip_code" autocomplete="postal-code" maxlength="20" required value="{{ $deliveryAddress?->zip_code }}" aria-describedby="zip_code-error"><p class="field-error" id="zip_code-error" data-error="zip_code"></p></div>
+                            <div class="field"><label for="country">COUNTRY</label><input id="country" name="country" autocomplete="country-name" maxlength="255" required value="{{ $deliveryAddress?->country }}" aria-describedby="country-error"><p class="field-error" id="country-error" data-error="country"></p></div>
+                        </fieldset>
+                        <div class="form-actions" data-address-actions @if($hasAddress) hidden @endif><button class="primary-button" type="submit">Save address ↗</button><button type="button" class="text-button" data-cancel-address @if(!$hasAddress) hidden @endif>Cancel</button></div>
                         <p class="form-status" role="status" aria-live="polite"></p>
                     </form>
                     <p class="delivery-note">Your saved delivery address.</p>

@@ -271,6 +271,9 @@
         /* ---------- Member information ---------- */
         .member-page .details-grid { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(260px, 1fr); gap: 40px; border-bottom: 1px solid; padding-bottom: 40px; }
         .member-page .delivery-card { border: 1px solid; padding: 24px; align-self: start; scroll-margin-top: 25px; }
+        .member-page .address-fields { border: 0; padding: 0; margin: 0; min-width: 0; }
+        .member-page .address-legend { font-size: 12px; margin-bottom: 16px; }
+        .member-page .address-fields:disabled input { opacity: 1; -webkit-text-fill-color: var(--ink); cursor: default; }
         .member-page .delivery-card form { margin-top: 24px; }
         .member-page .card-heading { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 24px; }
         .member-page .card-heading h3 { font: 12px 'IBM Plex Mono', monospace; margin: 0; }

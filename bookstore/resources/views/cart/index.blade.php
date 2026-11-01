@@ -31,9 +31,11 @@
                     <tr>
                         <td>
                             <div class="cart-item">
-                                <div class="cover">{{ $item->book->title }}</div>
+                                <a href="{{ route('books.show', $item->book) }}" class="cover">{{ $item->book->title }}</a>
                                 <div>
-                                    <p class="book-title">{{ $item->book->title }}</p>
+                                    <p class="book-title">
+                                        <a href="{{ route('books.show', $item->book) }}">{{ $item->book->title }}</a>
+                                    </p>
                                     <p style="margin: 0 0 6px;">{{ $item->book->author->full_name ?? '' }}</p>
                                     <p class="muted" style="margin: 0;">
                                         {{ $item->book->format }} / {{ $item->book->in_stock ? 'In stock' : 'Out of stock' }}

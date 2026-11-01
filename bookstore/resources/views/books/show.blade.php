@@ -1,5 +1,15 @@
 @extends('layouts.shop')
 @section('title', $book->title . ' — Margin')
+@php
+    // Read the existing review table without requiring a new model or endpoint.
+    $bookReviews = \Illuminate\Support\Facades\DB::table('reviews')
+        ->leftJoin('users', 'users.id', '=', 'reviews.user_id')
+        ->where('reviews.book_id', $book->id)
+        ->select('reviews.id', 'reviews.rating_star', 'reviews.comment', 'reviews.created_at', 'users.name as reviewer_name')
+        ->orderByDesc('reviews.created_at')->orderByDesc('reviews.id')->get();
+    $reviewCount = $bookReviews->count();
+    $averageRating = $reviewCount ? (float) $bookReviews->avg('rating_star') : 0;
+@endphp
 @section('body-class', 'book-page')
 @section('no-steps', '1')
 @section('main-class', 'book-main')

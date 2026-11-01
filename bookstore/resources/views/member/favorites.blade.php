@@ -9,6 +9,13 @@
 @endpush
 
 @section('content')
+    @php
+        // The existing favorites response contains IDs but omits slugs.
+        $favoriteBookIds = collect($authors)->merge($publishers)
+            ->flatMap(fn ($item) => $item['books'])->pluck('id')->unique();
+        $favoriteBookSlugs = \App\Models\Book::query()
+            ->whereIn('id', $favoriteBookIds)->pluck('slug', 'id');
+    @endphp
     <div class="account-grid">
         @include('member._sidebar')
 
@@ -28,7 +35,7 @@
                             </div>
                             <div class="favorite-books">
                                 @forelse(array_slice($item['books'], 0, 2) as $book)
-                                    <div class="favorite-book"><div class="book-cover" aria-hidden="true"><span>MARGIN / BOOKS</span><strong>{{ $book['title'] }}</strong><span>{{ $item['name'] }}</span></div><div><h3>{{ $book['title'] }}</h3><p>{{ $book['format'] }} / ฿{{ number_format((float) $book['price'], 2) }}</p>@if(Route::has('books.show'))<a class="book-link" href="{{ route('books.show', $book['id']) }}">View book ↗</a>@endif</div></div>
+                                    <div class="favorite-book"><div class="book-cover" aria-hidden="true"><span>MARGIN / BOOKS</span><strong>{{ $book['title'] }}</strong><span>{{ $item['name'] }}</span></div><div><h3>{{ $book['title'] }}</h3><p>{{ $book['format'] }} / ฿{{ number_format((float) $book['price'], 2) }}</p>@if(Route::has('books.show') && $favoriteBookSlugs->get($book['id']))<a class="book-link" href="{{ route('books.show', ['book' => $favoriteBookSlugs->get($book['id'])]) }}">View book ↗</a>@endif</div></div>
                                 @empty
                                     <p class="no-books">No books listed yet.</p>
                                 @endforelse

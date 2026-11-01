@@ -1131,3 +1131,37 @@ background: #ffffff;
 }
 
 }
+
+/* Reader ratings and comments */
+.book-detail__rating {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 16px 0 24px;
+    font-size: 12px;
+}
+.book-detail__rating a:hover { text-decoration: underline; }
+.book-detail__stars {
+    position: relative;
+    display: inline-block;
+    flex-shrink: 0;
+    color: var(--book-accent);
+    font-family: Georgia, serif;
+    font-size: 20px;
+    line-height: 1;
+    letter-spacing: 2px;
+    white-space: nowrap;
+}
+.book-detail__stars-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+}
+.book-detail__reviews { padding: 0 0 12px; scroll-margin-top: 24px; }
+.book-detail__review { padding: 24px 0; border-top: 1px solid var(--book-rule); }
+.book-detail__review-heading { display: flex; align-items: center; flex-wrap: wrap; gap: 12px 20px; }
+.book-detail__review-heading h3 { font: inherit; font-weight: 600; }
+.book-detail__review-heading time { font-size: 11px; }
+.book-page .book-detail__review-comment { margin-top: 14px; max-width: 75ch; white-space: pre-wrap; overflow-wrap: anywhere; }

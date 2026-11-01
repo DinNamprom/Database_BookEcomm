@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\ReviewController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -27,6 +28,9 @@ Route::get('/books', [BookController::class, 'index'])->name('books.index');
 Route::get('/books/{book:slug}/login', [BookController::class, 'beginPurchase'])
     ->name('books.purchase.login');
 Route::get('/books/{book:slug}', [BookController::class, 'show'])->name('books.show');
+
+Route::post('/books/{book:slug}/reviews', [ReviewController::class, 'store'])
+    ->middleware('auth')->name('reviews.store');
 
 require __DIR__.'/settings.php';
 require __DIR__.'/member-pages.php';

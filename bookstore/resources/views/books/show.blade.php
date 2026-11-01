@@ -1,15 +1,5 @@
 @extends('layouts.shop')
 @section('title', $book->title . ' — Margin')
-@php
-    // Read the existing review table without requiring a new model or endpoint.
-    $bookReviews = \Illuminate\Support\Facades\DB::table('reviews')
-        ->leftJoin('users', 'users.id', '=', 'reviews.user_id')
-        ->where('reviews.book_id', $book->id)
-        ->select('reviews.id', 'reviews.rating_star', 'reviews.comment', 'reviews.created_at', 'users.name as reviewer_name')
-        ->orderByDesc('reviews.created_at')->orderByDesc('reviews.id')->get();
-    $reviewCount = $bookReviews->count();
-    $averageRating = $reviewCount ? (float) $bookReviews->avg('rating_star') : 0;
-@endphp
 @section('body-class', 'book-page')
 @section('no-steps', '1')
 @section('main-class', 'book-main')
@@ -150,6 +140,16 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 @endpush
 @section('content')
+@php
+    // Read the existing review table without requiring a new model or endpoint.
+    $bookReviews = \Illuminate\Support\Facades\DB::table('reviews')
+        ->leftJoin('users', 'users.id', '=', 'reviews.user_id')
+        ->where('reviews.book_id', $book->id)
+        ->select('reviews.id', 'reviews.rating_star', 'reviews.comment', 'reviews.created_at', 'users.name as reviewer_name')
+        ->orderByDesc('reviews.created_at')->orderByDesc('reviews.id')->get();
+    $reviewCount = $bookReviews->count();
+    $averageRating = $reviewCount ? (float) $bookReviews->avg('rating_star') : 0;
+@endphp
 <div class="book-detail">
     {{-- =====================================================
          TOP NAVIGATION
@@ -219,6 +219,17 @@ document.addEventListener('DOMContentLoaded', function () {
             <h2 class="book-detail__title">
                 {{ $book->title }}
             </h2>
+            <div class="book-detail__rating">
+                <span class="book-detail__stars" role="img" aria-label="{{ number_format($averageRating, 1) }} out of 5 stars">
+                    <span aria-hidden="true">☆☆☆☆☆</span>
+                    <span class="book-detail__stars-fill" style="width: {{ max(0, min(100, $averageRating / 5 * 100)) }}%" aria-hidden="true">★★★★★</span>
+                </span>
+                @if ($reviewCount)
+                    <a href="#book-reviews">{{ number_format($averageRating, 1) }} / 5 · {{ $reviewCount }} {{ $reviewCount === 1 ? 'review' : 'reviews' }}</a>
+                @else
+                    <span class="book-muted">No ratings yet</span>
+                @endif
+            </div>
             {{-- Author / Publisher --}}
             <div class="book-detail__metadata">
                 @if ($book->author)
@@ -429,6 +440,55 @@ document.addEventListener('DOMContentLoaded', function () {
     {{-- =====================================================
          DIVIDER
          ===================================================== --}}
+    <div class="book-detail__divider book-detail__hero-bottom book-detail__divider--dark"></div>
+    <section class="book-detail__reviews" id="book-reviews" aria-labelledby="book-reviews-title">
+        <h2 class="book-detail__particulars-title" id="book-reviews-title">Reader reviews.</h2>
+        @if (session('review_success'))
+            <p class="book-detail__review-success" role="status">{{ session('review_success') }}</p>
+        @endif
+        @auth
+            <form class="book-detail__review-form" method="POST" action="{{ route('reviews.store', ['book' => $book->slug]) }}" aria-labelledby="write-review-title">
+                @csrf
+                <h3 class="book-detail__review-form-title" id="write-review-title">Share your thoughts.</h3>
+                @error('rating_star')
+                    <p class="book-detail__review-error" role="alert">{{ $message }}</p>
+                @enderror
+                <fieldset class="book-detail__rating-input">
+                    <legend>Your rating</legend>
+                    <div class="book-detail__rating-options">
+                        @for ($star = 5; $star >= 1; $star--)
+                            <input type="radio" id="review-star-{{ $star }}" name="rating_star" value="{{ $star }}" @checked((int) old('rating_star') === $star) required>
+                            <label for="review-star-{{ $star }}"><span aria-hidden="true">★</span><span class="book-detail__sr-only">{{ $star }} {{ $star === 1 ? 'star' : 'stars' }}</span></label>
+                        @endfor
+                    </div>
+                </fieldset>
+                <label class="book-detail__comment-label" for="review-comment">Your comment</label>
+                <textarea class="book-detail__comment-input" id="review-comment" name="comment" rows="4" maxlength="5000" placeholder="What did you think of this book?">{{ old('comment') }}</textarea>
+                @error('comment')
+                    <p class="book-detail__review-error" role="alert">{{ $message }}</p>
+                @enderror
+                <button class="book-detail__review-submit" type="submit">Submit review ↗</button>
+            </form>
+        @endauth
+        @forelse ($bookReviews as $review)
+            <article class="book-detail__review">
+                <div class="book-detail__review-heading">
+                    <h3>{{ $review->reviewer_name ?? 'Reader' }}</h3>
+                    <span class="book-detail__stars" role="img" aria-label="{{ $review->rating_star }} out of 5 stars">
+                        <span aria-hidden="true">{{ str_repeat('★', max(0, min(5, (int) $review->rating_star))) }}{{ str_repeat('☆', 5 - max(0, min(5, (int) $review->rating_star))) }}</span>
+                    </span>
+                    @if ($review->created_at)
+                        <time class="book-muted" datetime="{{ \Illuminate\Support\Carbon::parse($review->created_at)->toDateString() }}">{{ \Illuminate\Support\Carbon::parse($review->created_at)->format('d M Y') }}</time>
+                    @endif
+                </div>
+                @if (filled($review->comment))
+                    <p class="book-detail__review-comment">{{ $review->comment }}</p>
+                @endif
+            </article>
+        @empty
+            <p class="book-muted">No reviews yet.</p>
+        @endforelse
+    </section>
     <div class="book-detail__divider book-detail__hero-bottom book-detail__divider--dark"></div>
     {{-- =====================================================
          RELATED BOOKS

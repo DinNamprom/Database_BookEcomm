@@ -21,14 +21,17 @@ class CheckoutController extends Controller
         $subtotal = $items->sum(fn ($item) => $item->quantity * $item->book->price);
         $shipping = 5.00;
         $tax = 0;
+        $user = Auth::user();
+        $address = $user->defaultAddress;
 
         return view('checkout.index', [
-            'items' => $items,
+            'user'     => $user,
+            'address'  => $address,
+            'items'    => $items,
             'subtotal' => $subtotal,
             'shipping' => $shipping,
-            'tax' => $tax,
-            'total' => $subtotal + $shipping + $tax,
-            'user' => Auth::user(),
+            'tax'      => $tax,
+            'total'    => $subtotal + $shipping + $tax,
         ]);
     }
 

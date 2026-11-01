@@ -2,7 +2,7 @@
     <p class="sidebar-name">{{ auth()->user()->name }}</p>
 
     <nav aria-label="Account">
-        <a href="{{ Route::has('member-information.edit') ? route('member-information.edit') : '#' }}"
+        <a href="{{ route('member-information.index') }}"
            @if (request()->routeIs('member-information.*')) aria-current="page" @endif>Member information</a>
 
         <a href="{{ route('favorites.index') }}"

@@ -275,7 +275,7 @@
                     <a href="{{ url('/register') }}">Register</a>
                 </span>
             @else
-                <a href="{{ url('/dashboard') }}">{{ auth()->user()->name }}</a>
+                <a href="{{ route('member-information.index') }}" data-member-account aria-label="My account"><span data-member-name>{{ auth()->user()->name }}</span> ↗</a>
             @endguest
             <a href="{{ Route::has('cart.index') ? route('cart.index') : '#' }}">Bag</a>
         </div>

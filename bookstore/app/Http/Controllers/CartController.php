@@ -29,17 +29,30 @@ class CartController extends Controller
         ]);
     }
 
+    
     public function store(Request $request, Book $book)
     {
-        $qty = $validated['quantity'] ?? 1;
+        $validated = $request->validate([
+            'quantity' => ['required', 'integer', 'min:1', 'max:99'],
+        ]);
 
-        $query = CartItem::where('user_id', Auth::id())->where('book_id', $book->id);
+        $userId = Auth::id();
+        $qty = $validated['quantity'];
+
+        // Ensure the user has a cart before creating cart items.
+        Cart::firstOrCreate(
+            ['user_id' => $userId],
+            ['total_price' => 0]
+        );
+
+        $query = CartItem::where('user_id', $userId)
+            ->where('book_id', $book->id);
 
         if ($query->exists()) {
             $query->increment('quantity', $qty);
         } else {
             CartItem::create([
-                'user_id' => Auth::id(),
+                'user_id' => $userId,
                 'book_id' => $book->id,
                 'quantity' => $qty,
             ]);
@@ -47,18 +60,33 @@ class CartController extends Controller
 
         $this->refreshCartTotal();
 
-        return redirect()->route('cart.index');
+        // AJAX requests should stay on the current page.
+        if ($request->ajax() || $request->expectsJson()) {
+            return response()->json([
+                'message' => 'Book added to bag successfully.',
+                'book_id' => $book->id,
+                'quantity_added' => $qty,
+            ]);
+        }
+
+        // Normal form submissions return to the previous page.
+        return back()->with('success', 'Book added to bag successfully.');
     }
 
     public function update(Request $request, Book $book)
     {
         $validated = $request->validate([
-            'quantity' => ['required', 'integer', 'min:1', 'max:99'],
+            'quantity' => ['required', 'integer', 'min:0', 'max:99'],
         ]);
 
-        CartItem::where('user_id', Auth::id())
-            ->where('book_id', $book->id)
-            ->update(['quantity' => $validated['quantity']]);
+        $query = CartItem::where('user_id', Auth::id())
+            ->where('book_id', $book->id);
+
+        if ($validated['quantity'] === 0) {
+            $query->delete();
+        } else {
+            $query->update(['quantity' => $validated['quantity']]);
+        }
 
         $this->refreshCartTotal();
 

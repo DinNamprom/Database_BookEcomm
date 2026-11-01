@@ -10,10 +10,12 @@ Route::middleware('auth')->group(function () {
     Route::view('member-information', 'member.information')->name('member-information.index');
 
     Route::get('favorites/data', [FavoriteController::class, 'index'])->name('favorites.data');
-    Route::delete('favorites/authors/{author}', [FavoriteController::class, 'removeAuthor'])
-        ->whereNumber('author')->name('favorites.authors.remove');
-    Route::delete('favorites/publishers/{publisher}', [FavoriteController::class, 'removePublisher'])
-        ->whereNumber('publisher')->name('favorites.publishers.remove');
+    Route::put('favorites/books/{book}', [FavoriteController::class, 'saveBook'])->name('favorites.books.save');
+    Route::delete('favorites/books/{book}', [FavoriteController::class, 'removeBook'])->name('favorites.books.remove');
+    Route::put('favorites/authors/{author}', [FavoriteController::class, 'saveAuthor'])->name('favorites.authors.save');
+    Route::delete('favorites/authors/{author}', [FavoriteController::class, 'removeAuthor'])->name('favorites.authors.remove');
+    Route::put('favorites/publishers/{publisher}', [FavoriteController::class, 'savePublisher'])->name('favorites.publishers.save');
+    Route::delete('favorites/publishers/{publisher}', [FavoriteController::class, 'removePublisher'])->name('favorites.publishers.remove');
 
     Route::get('member-information/data', [MemberInformationController::class, 'show'])->name('member-information.data');
     Route::patch('member-information', [MemberInformationController::class, 'update'])->name('member-information.update');

@@ -32,34 +32,36 @@
         @csrf
 
         <div>
-            <p class="text-xs" style="color: var(--accent);">01 / CONTACT</p>
-            <p>{{ $user->email }}</p>
-        </div>
-
-        <div>
-            <h2 class="text-2xl mb-4">02 / Where to?</h2>
-            <div class="grid grid-cols-2 gap-4">
-                <div><label class="text-xs" style="color: var(--taupe);">FIRST NAME</label>
-                    <input type="text" name="first_name" required value="{{ old('first_name', $user->name) }}" class="w-full border px-3 py-2" style="border-color: var(--taupe-light); background: transparent;"></div>
-                <div><label class="text-xs" style="color: var(--taupe);">LAST NAME</label>
-                    <input type="text" name="last_name" required value="{{ old('last_name') }}" class="w-full border px-3 py-2" style="border-color: var(--taupe-light); background: transparent;"></div>
-                <div class="col-span-2"><label class="text-xs" style="color: var(--taupe);">STREET ADDRESS</label>
-                    <input type="text" name="street_address" required value="{{ old('street_address', $user->address) }}" class="w-full border px-3 py-2" style="border-color: var(--taupe-light); background: transparent;"></div>
-                <div><label class="text-xs" style="color: var(--taupe);">CITY</label>
-                    <input type="text" name="city" required value="{{ old('city') }}" class="w-full border px-3 py-2" style="border-color: var(--taupe-light); background: transparent;"></div>
-                <div><label class="text-xs" style="color: var(--taupe);">STATE</label>
-                    <input type="text" name="state" required value="{{ old('state') }}" class="w-full border px-3 py-2" style="border-color: var(--taupe-light); background: transparent;"></div>
-                <div><label class="text-xs" style="color: var(--taupe);">ZIP CODE</label>
-                    <input type="text" name="zip_code" required value="{{ old('zip_code') }}" class="w-full border px-3 py-2" style="border-color: var(--taupe-light); background: transparent;"></div>
-                <div><label class="text-xs" style="color: var(--taupe);">COUNTRY</label>
-                    <input type="text" name="country" required value="{{ old('country', 'United States') }}" class="w-full border px-3 py-2" style="border-color: var(--taupe-light); background: transparent;"></div>
-                <div class="col-span-2"><label class="text-xs" style="color: var(--taupe);">PHONE</label>
-                    <input type="tel" name="phone" minlength="9" title="Enter 9 or 10 digits" value="{{ old('phone') }}" maxlength="10" inputmode="numeric" autocomplete="tel" placeholder="0812345678" class="w-full border px-3 py-2" style="border-color: var(--taupe-light); background: transparent;"></div>
+            <h2 class="step-heading text-2xl mb-4">01 / Contact</h2>
+            <div class="mt-2"><label class="text-xs" style="color: var(--taupe);">EMAIL ADDRESS</label>
+                <p class="py-2">{{ $user->email }}</p>
             </div>
         </div>
 
         <div>
-            <h2 class="text-2xl mb-4">03 / The journey</h2>
+            <h2 class="step-heading text-2xl mb-4">02 / Where to?</h2>
+            <div class="grid grid-cols-2 gap-4">
+                <div><label class="text-xs" style="color: var(--taupe);">FIRST NAME</label>
+                    <input type="text" name="first_name" required value="{{ old('first_name', $user->first_name ?: $user->name) }}" class="w-full border px-3 py-2" style="border-color: var(--taupe-light); background: transparent;"></div>
+                <div><label class="text-xs" style="color: var(--taupe);">LAST NAME</label>
+                    <input type="text" name="last_name" required value="{{ old('last_name', $user->last_name) }}" class="w-full border px-3 py-2" style="border-color: var(--taupe-light); background: transparent;"></div>
+                <div class="col-span-2"><label class="text-xs" style="color: var(--taupe);">STREET ADDRESS</label>
+                    <input type="text" name="street_address" required value="{{ old('street_address', $address?->street_address) }}" class="w-full border px-3 py-2" style="border-color: var(--taupe-light); background: transparent;"></div>
+                <div><label class="text-xs" style="color: var(--taupe);">CITY</label>
+                    <input type="text" name="city" required value="{{ old('city', $address?->city) }}" class="w-full border px-3 py-2" style="border-color: var(--taupe-light); background: transparent;"></div>
+                <div><label class="text-xs" style="color: var(--taupe);">STATE</label>
+                    <input type="text" name="state" required value="{{ old('state', $address?->state) }}" class="w-full border px-3 py-2" style="border-color: var(--taupe-light); background: transparent;"></div>
+                <div><label class="text-xs" style="color: var(--taupe);">ZIP CODE</label>
+                    <input type="text" name="zip_code" required value="{{ old('zip_code', $address?->zip_code) }}" class="w-full border px-3 py-2" style="border-color: var(--taupe-light); background: transparent;"></div>
+                <div><label class="text-xs" style="color: var(--taupe);">COUNTRY</label>
+                    <input type="text" name="country" required value="{{ old('country', $address?->country ?? 'United States') }}" class="w-full border px-3 py-2" style="border-color: var(--taupe-light); background: transparent;"></div>
+                <div class="col-span-2"><label class="text-xs" style="color: var(--taupe);">PHONE</label>
+                    <input type="tel" name="phone" minlength="9" title="Enter 9 or 10 digits" value="{{ old('phone', $user->phone_number) }}" maxlength="10" inputmode="numeric" autocomplete="tel" placeholder="0812345678" class="w-full border px-3 py-2" style="border-color: var(--taupe-light); background: transparent;"></div>
+            </div>
+        </div>
+
+        <div>
+            <h2 class="step-heading text-2xl mb-4">03 / The journey</h2>
             <div class="border p-4 flex justify-between" style="border-color: var(--ink);">
                 <div>
                     <p>Standard shipping</p>

@@ -7,6 +7,8 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -36,6 +38,12 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, PasskeyAuthenticatable, TwoFactorAuthenticatable;
+
+    /** @return BelongsToMany<Book, $this> */
+    public function favoriteBooks(): BelongsToMany
+    {
+        return $this->belongsToMany(Book::class, 'wishlists');
+    }
 
     /** @return BelongsToMany<Author, $this> */
     public function favoriteAuthors(): BelongsToMany
@@ -87,5 +95,15 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
     public function shippings()
     {
         return $this->hasMany(Shipping::class);
+    }
+
+    public function addresses(): HasMany
+    {
+        return $this->hasMany(Address::class);
+    }
+
+    public function defaultAddress(): HasOne
+    {
+        return $this->hasOne(Address::class)->where('is_default', true);
     }
 }

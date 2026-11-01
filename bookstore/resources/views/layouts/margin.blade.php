@@ -102,7 +102,7 @@
             <a href="{{ url('/') }}" class="brand">MARGIN <sup>&reg;</sup></a>
             <nav class="site-nav">
                 <a href="{{ url('/') }}">Home</a>
-                <a href="#">Books</a>
+                <a href="{{ route('books.index') }}">Books</a>
                 <a href="#">Our story</a>
             </nav>
             <div class="site-user">

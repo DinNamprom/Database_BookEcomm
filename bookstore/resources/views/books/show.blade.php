@@ -10,12 +10,12 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    const homeUrl = @json(route('home'));
+    const booksUrl = @json(route('books.index'));
     document.getElementById('backToCollection')?.addEventListener('click', () => {
-        window.location.href = homeUrl;
+        window.location.href = booksUrl;
     });
     document.getElementById('browseAllBooks')?.addEventListener('click', () => {
-        window.location.href = homeUrl;
+        window.location.href = booksUrl;
     });
 
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
@@ -443,33 +443,6 @@ document.addEventListener('DOMContentLoaded', function () {
     <div class="book-detail__divider book-detail__hero-bottom book-detail__divider--dark"></div>
     <section class="book-detail__reviews" id="book-reviews" aria-labelledby="book-reviews-title">
         <h2 class="book-detail__particulars-title" id="book-reviews-title">Reader reviews.</h2>
-        @if (session('review_success'))
-            <p class="book-detail__review-success" role="status">{{ session('review_success') }}</p>
-        @endif
-        @auth
-            <form class="book-detail__review-form" method="POST" action="{{ route('reviews.store', ['book' => $book->slug]) }}" aria-labelledby="write-review-title">
-                @csrf
-                <h3 class="book-detail__review-form-title" id="write-review-title">Share your thoughts.</h3>
-                @error('rating_star')
-                    <p class="book-detail__review-error" role="alert">{{ $message }}</p>
-                @enderror
-                <fieldset class="book-detail__rating-input">
-                    <legend>Your rating</legend>
-                    <div class="book-detail__rating-options">
-                        @for ($star = 5; $star >= 1; $star--)
-                            <input type="radio" id="review-star-{{ $star }}" name="rating_star" value="{{ $star }}" @checked((int) old('rating_star') === $star) required>
-                            <label for="review-star-{{ $star }}"><span aria-hidden="true">★</span><span class="book-detail__sr-only">{{ $star }} {{ $star === 1 ? 'star' : 'stars' }}</span></label>
-                        @endfor
-                    </div>
-                </fieldset>
-                <label class="book-detail__comment-label" for="review-comment">Your comment</label>
-                <textarea class="book-detail__comment-input" id="review-comment" name="comment" rows="4" maxlength="5000" placeholder="What did you think of this book?">{{ old('comment') }}</textarea>
-                @error('comment')
-                    <p class="book-detail__review-error" role="alert">{{ $message }}</p>
-                @enderror
-                <button class="book-detail__review-submit" type="submit">Submit review ↗</button>
-            </form>
-        @endauth
         @forelse ($bookReviews as $review)
             <article class="book-detail__review">
                 <div class="book-detail__review-heading">

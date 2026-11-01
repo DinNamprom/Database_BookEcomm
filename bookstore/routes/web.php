@@ -24,6 +24,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/checkout/confirmation/{shipping}', [CheckoutController::class, 'confirmation'])->name('checkout.confirmation');
 });
 
+Route::get('/books', [BookController::class, 'index'])->name('books.index');
 Route::get('/books/{book:slug}/login', [BookController::class, 'beginPurchase'])
     ->name('books.purchase.login');
 Route::get('/books/{book:slug}', [BookController::class, 'show'])->name('books.show');

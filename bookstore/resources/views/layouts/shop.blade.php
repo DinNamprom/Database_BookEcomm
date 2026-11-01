@@ -105,7 +105,8 @@
         .cart-table .num { text-align: right; }
         .cart-item { display: flex; gap: 16px; }
         .cart-item .cover { width: 64px; height: 88px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 9px; padding: 4px; background: var(--taupe-light); }
-        .cart-item .book-title { font-family: 'Bodoni Moda', serif; font-size: 20px; margin: 0 0 4px; }
+        .cart-item a { color: inherit; text-decoration: none; }
+        .cart-item .book-title a:hover { text-decoration: underline; }
         .link-remove { background: none; border: 0; padding: 0; margin-top: 8px; font: inherit; font-size: 12px; color: var(--accent); text-decoration: underline; cursor: pointer; }
         .qty { display: inline-flex; align-items: center; border: 1px solid var(--ink); }
         .qty form { margin: 0; }
@@ -114,6 +115,8 @@
         .qty input::-webkit-outer-spin-button, .qty input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
         .cart-foot { display: flex; justify-content: space-between; padding-top: 16px; font-size: 12px; color: var(--taupe); }
         .cart-foot a { color: var(--ink); }
+        .step-heading { margin-top: 1rem; }
+        
 
         /* ---------- Order summary ---------- */
         .summary { border: 1px solid var(--ink); padding: 24px; }
@@ -270,9 +273,12 @@
 
         <div class="header-right">
             @guest
-                <a href="{{ url('/login') }}">Log in / Register</a>
+                <span>
+                    <a href="{{ url('/login') }}">Log in</a> /
+                    <a href="{{ url('/register') }}">Register</a>
+                </span>
             @else
-                <a href="{{ url('/dashboard') }}">{{ auth()->user()->name }}</a>
+                <a href="{{ route('member-information.index') }}" data-member-account aria-label="My account"><span data-member-name>{{ auth()->user()->name }}</span> ↗</a>
             @endguest
             <a href="{{ Route::has('cart.index') ? route('cart.index') : '#' }}">Bag</a>
         </div>

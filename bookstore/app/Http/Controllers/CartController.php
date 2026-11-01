@@ -73,6 +73,26 @@ class CartController extends Controller
         return back()->with('success', 'Book added to bag successfully.');
     }
 
+    public function update(Request $request, Book $book)
+    {
+        $validated = $request->validate([
+            'quantity' => ['required', 'integer', 'min:0', 'max:99'],
+        ]);
+
+        $query = CartItem::where('user_id', Auth::id())
+            ->where('book_id', $book->id);
+
+        if ($validated['quantity'] === 0) {
+            $query->delete();
+        } else {
+            $query->update(['quantity' => $validated['quantity']]);
+        }
+
+        $this->refreshCartTotal();
+
+        return redirect()->route('cart.index');
+    }
+
     public function destroy(Book $book)
     {
         CartItem::where('user_id', Auth::id())

@@ -10,12 +10,12 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    const homeUrl = @json(route('home'));
+    const booksUrl = @json(route('books.index'));
     document.getElementById('backToCollection')?.addEventListener('click', () => {
-        window.location.href = homeUrl;
+        window.location.href = booksUrl;
     });
     document.getElementById('browseAllBooks')?.addEventListener('click', () => {
-        window.location.href = homeUrl;
+        window.location.href = booksUrl;
     });
 
     const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;

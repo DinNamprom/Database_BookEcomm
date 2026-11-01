@@ -50,10 +50,12 @@
         .shop-grid { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 48px; align-items: start; }
         @media (max-width: 900px) { .shop-grid { grid-template-columns: 1fr; } }
 
-        /* ---------- Home page ---------- */
+        /* ---------- Home & Catalog book cards ---------- */
         .home-section { padding: 3rem 2rem; }
         .home-section h2,
-        .home-section h3 { font-family: 'Playfair Display', serif; font-weight: 400; }
+        .home-section h3,
+        .catalog-section h2,
+        .catalog-section h3 { font-family: 'Playfair Display', 'Bodoni Moda', serif; font-weight: 400; }
 
         .home-section .section-header { margin-bottom: 3rem; }
         .home-section .section-subtitle { color: #d4462e; font-size: 0.9rem; text-transform: uppercase; margin-bottom: 0.5rem; }
@@ -61,41 +63,115 @@
         .home-section .section-title { font-size: 4rem; margin: 0; letter-spacing: -0.02em; }
         .home-section .browse-link { color: #1a1a1a; text-decoration: none; text-transform: uppercase; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem; }
 
-        .home-section .books-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; }
-        .home-section .book-card { display: flex; flex-direction: column; }
+        .home-section .books-grid,
+        .catalog-section .books-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; }
+        .home-section .book-card,
+        .catalog-section .book-card { display: flex; flex-direction: column; min-width: 0; }
 
-        .home-section .book-cover { aspect-ratio: 3/4; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 2rem; border: 1px solid #1a1a1a; margin-bottom: 1rem; position: relative; text-align: center; }
-        .home-section .book-cover-top { position: absolute; top: 1rem; left: 1rem; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; }
-        .home-section .book-cover-title { font-family: 'Playfair Display', serif; font-size: 2.2rem; line-height: 1.1; margin-bottom: 2rem; }
-        .home-section .book-cover-author { position: absolute; bottom: 1rem; left: 1rem; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
-        .home-section .book-shape { width: 120px; height: 120px; display: flex; justify-content: center; align-items: center; }
+        .home-section .book-cover,
+        .catalog-section .book-cover { aspect-ratio: 3/4; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 2rem; border: 1px solid #1a1a1a; margin-bottom: 1rem; position: relative; text-align: center; text-decoration: none; color: inherit; }
+        .home-section .book-cover-top,
+        .catalog-section .book-cover-top { position: absolute; top: 1rem; left: 1rem; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; }
+        .home-section .book-cover-title,
+        .catalog-section .book-cover-title { font-family: 'Playfair Display', 'Bodoni Moda', serif; font-size: 2.2rem; line-height: 1.1; margin-bottom: 2rem; }
+        .home-section .book-cover-author,
+        .catalog-section .book-cover-author { position: absolute; bottom: 1rem; left: 1rem; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .home-section .book-shape,
+        .catalog-section .book-shape { width: 120px; height: 120px; display: flex; justify-content: center; align-items: center; }
 
-        .home-section .book-meta { font-size: 0.8rem; text-transform: uppercase; color: #666; margin-bottom: 0.5rem; }
-        .home-section .book-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; margin: 0 0 1rem 0; line-height: 1.2; }
-        .home-section .book-author-info { font-size: 0.9rem; margin-bottom: 0.2rem; }
-        .home-section .book-format-stock { font-size: 0.8rem; color: #666; padding-bottom: 1rem; border-bottom: 1px solid #ccc; margin-bottom: 1rem; }
-        .home-section .book-price-action { display: flex; justify-content: space-between; align-items: center; }
-        .home-section .book-price { font-size: 1.1rem; }
-        .home-section .view-book-btn { color: #d4462e; text-decoration: none; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.05em; }
+        /* Cover color themes (Red / Cream / Dark) */
+        .catalog-section .book-cover.cover-red { background-color: var(--accent); color: var(--cream); --shape-fg: var(--cream); --shape-cutout: var(--accent); }
+        .catalog-section .book-cover.cover-cream { background-color: var(--cream); color: var(--ink); --shape-fg: var(--ink); --shape-cutout: var(--cream); }
+        .catalog-section .book-cover.cover-dark { background-color: var(--ink); color: var(--cream); --shape-fg: var(--cream); --shape-cutout: var(--ink); }
+
+        .home-section .book-meta,
+        .catalog-section .book-meta { font-size: 0.8rem; text-transform: uppercase; color: #666; margin-bottom: 0.5rem; }
+        .home-section .book-title,
+        .catalog-section .book-title { font-family: 'Playfair Display', 'Bodoni Moda', serif; font-size: 1.8rem; margin: 0 0 1rem 0; line-height: 1.2; }
+        .catalog-section .book-title a { color: inherit; text-decoration: none; }
+        .home-section .book-author-info,
+        .catalog-section .book-author-info { font-size: 0.9rem; margin-bottom: 0.2rem; }
+        .home-section .book-format-stock,
+        .catalog-section .book-format-stock { font-size: 0.8rem; color: #666; padding-bottom: 1rem; border-bottom: 1px solid #ccc; margin-bottom: 1rem; }
+        .home-section .book-price-action,
+        .catalog-section .book-price-action { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
+        .home-section .book-price,
+        .catalog-section .book-price { font-size: 1.1rem; }
+        .home-section .view-book-btn,
+        .catalog-section .view-book-btn { color: #d4462e; text-decoration: none; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.05em; }
 
         /* Shapes for dummy covers */
-        .home-section .shape-circle { width: 80px; height: 80px; border-radius: 50%; border: 10px solid white; position: relative; }
-        .home-section .shape-circle::after { content: ''; position: absolute; width: 20px; height: 20px; background: white; border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        .home-section .shape-circle,
+        .catalog-section .shape-circle { width: 80px; height: 80px; border-radius: 50%; border: 10px solid var(--shape-fg, white); position: relative; }
+        .home-section .shape-circle::after,
+        .catalog-section .shape-circle::after { content: ''; position: absolute; width: 20px; height: 20px; background: var(--shape-fg, white); border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); }
 
-        .home-section .shape-steps { width: 100px; height: 60px; display: flex; flex-direction: column; align-items: center; }
-        .home-section .shape-steps .step1 { width: 100px; height: 5px; background: black; margin-bottom: 5px; }
-        .home-section .shape-steps .step2 { width: 80px; height: 20px; border: 2px solid black; margin-bottom: 5px; }
-        .home-section .shape-steps .step3 { width: 50px; height: 30px; background: black; }
+        .home-section .shape-steps,
+        .catalog-section .shape-steps { width: 100px; height: 60px; display: flex; flex-direction: column; align-items: center; }
+        .home-section .shape-steps .step1,
+        .catalog-section .shape-steps .step1 { width: 100px; height: 5px; background: var(--shape-fg, black); margin-bottom: 5px; }
+        .home-section .shape-steps .step2,
+        .catalog-section .shape-steps .step2 { width: 80px; height: 20px; border: 2px solid var(--shape-fg, black); margin-bottom: 5px; }
+        .home-section .shape-steps .step3,
+        .catalog-section .shape-steps .step3 { width: 50px; height: 30px; background: var(--shape-fg, black); }
 
-        .home-section .shape-split-circle { width: 90px; height: 90px; border-radius: 50%; background: white; position: relative; overflow: hidden; }
-        .home-section .shape-split-circle::after { content: ''; position: absolute; top: 45%; left: -10px; right: -10px; height: 10px; background: #1a1a1a; }
+        .home-section .shape-split-circle,
+        .catalog-section .shape-split-circle { width: 90px; height: 90px; border-radius: 50%; background: var(--shape-fg, white); position: relative; overflow: hidden; }
+        .home-section .shape-split-circle::after,
+        .catalog-section .shape-split-circle::after { content: ''; position: absolute; top: 45%; left: -10px; right: -10px; height: 10px; background: var(--shape-cutout, #1a1a1a); }
 
-        .home-section .shape-bars { display: flex; align-items: flex-end; gap: 8px; height: 80px; }
-        .home-section .shape-bars div { background: black; width: 20px; }
-        .home-section .shape-bars .b1 { height: 40px; }
-        .home-section .shape-bars .b2 { height: 70px; }
-        .home-section .shape-bars .b3 { height: 50px; }
-        .home-section .shape-bars .b4 { height: 80px; }
+        .home-section .shape-bars,
+        .catalog-section .shape-bars { display: flex; align-items: flex-end; gap: 8px; height: 80px; }
+        .home-section .shape-bars div,
+        .catalog-section .shape-bars div { background: var(--shape-fg, black); width: 20px; }
+        .home-section .shape-bars .b1,
+        .catalog-section .shape-bars .b1 { height: 40px; }
+        .home-section .shape-bars .b2,
+        .catalog-section .shape-bars .b2 { height: 70px; }
+        .home-section .shape-bars .b3,
+        .catalog-section .shape-bars .b3 { height: 50px; }
+        .home-section .shape-bars .b4,
+        .catalog-section .shape-bars .b4 { height: 80px; }
+
+        /* ---------- Browse All Books (Catalog) ---------- */
+        .catalog-main { max-width: 1360px; margin: 0 auto; padding: 40px 2rem 0; }
+        .catalog-section .page-title { font-size: clamp(44px, 5vw, 68px); margin: 0 0 28px; }
+        .catalog-toolbar { display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 16px; margin-bottom: 24px; }
+        .catalog-search { display: flex; align-items: center; gap: 12px; height: 50px; padding: 0 16px; border: 1px solid var(--ink); }
+        .catalog-search input { flex: 1; min-width: 0; border: 0; background: transparent; font: inherit; font-size: 12px; color: var(--ink); outline: none; }
+        .catalog-search input::placeholder { color: var(--taupe); }
+        .catalog-search .shortcut { font-size: 11px; color: var(--taupe); }
+        .catalog-sort { position: relative; display: flex; align-items: center; height: 50px; border: 1px solid var(--ink); }
+        .catalog-sort select { width: 100%; height: 100%; padding: 0 36px 0 16px; border: 0; background: transparent; font: inherit; font-size: 12px; color: var(--ink); appearance: none; cursor: pointer; outline: none; }
+        .catalog-sort .chevron { position: absolute; right: 14px; font-size: 11px; pointer-events: none; }
+        .catalog-guest-note { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 14px 0; border-top: 1px solid var(--taupe-light); border-bottom: 1px solid var(--taupe-light); font-size: 12px; }
+        .catalog-guest-note p { margin: 0; }
+        .catalog-guest-note a { color: var(--accent); text-decoration: none; white-space: nowrap; }
+        .catalog-divider { border: 0; border-top: 1px solid var(--taupe-light); margin: 0; }
+        .catalog-layout { display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: 48px; align-items: start; padding-top: 28px; }
+        .catalog-sidebar h4 { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; margin: 0 0 14px; }
+        .catalog-sidebar hr { border: 0; border-top: 1px solid var(--taupe-light); margin: 22px 0; }
+        .catalog-subject-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; font-size: 12px; }
+        .catalog-subject-list a { display: flex; justify-content: space-between; color: var(--ink); text-decoration: none; }
+        .catalog-subject-list a.active .subject-label { color: var(--accent); }
+        .catalog-subject-list .subject-count { color: var(--taupe); font-size: 11px; }
+        .catalog-filter-checks { display: grid; gap: 10px; font-size: 12px; }
+        .catalog-filter-checks label { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
+        .catalog-filter-checks input[type="checkbox"] { accent-color: var(--ink); cursor: pointer; }
+        .catalog-topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; }
+        .catalog-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 36px; padding-top: 20px; border-top: 1px solid var(--taupe-light); font-size: 12px; }
+        .catalog-pages { display: flex; align-items: center; gap: 18px; }
+        .catalog-pages a, .catalog-pages span { color: var(--ink); text-decoration: none; }
+        .catalog-pages .active { color: var(--accent); }
+        .catalog-pages .disabled { color: var(--accent); opacity: .7; }
+        @media (max-width: 1024px) {
+            .catalog-layout { grid-template-columns: 1fr; }
+            .catalog-section .books-grid { grid-template-columns: repeat(2, 1fr); }
+            .catalog-toolbar { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 600px) {
+            .catalog-section .books-grid { grid-template-columns: 1fr; }
+        }
 
         /* ---------- Cart ---------- */
         .cart-table { width: 100%; border-collapse: collapse; }
@@ -264,7 +340,7 @@
 
         <nav class="nav-links">
             <a href="{{ url('/') }}" class="{{ request()->is('/') ? 'active' : '' }}">Home</a>
-            <a href="#">Books</a>
+            <a href="{{ route('books.index') }}" class="{{ request()->routeIs('books.*') ? 'active' : '' }}">Books</a>
             <a href="#">Our story</a>
         </nav>
 
@@ -277,7 +353,7 @@
             @else
                 <a href="{{ route('member-information.index') }}" data-member-account aria-label="My account"><span data-member-name>{{ auth()->user()->name }}</span> ↗</a>
             @endguest
-            <a href="{{ Route::has('cart.index') ? route('cart.index') : '#' }}">Bag</a>
+            <a href="{{ Route::has('cart.index') ? route('cart.index') : '#' }}">Bag ({{ auth()->check() ? auth()->user()->cartItems()->sum('quantity') : 0 }})</a>
         </div>
     </header>
 

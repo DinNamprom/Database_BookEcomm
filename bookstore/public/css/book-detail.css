@@ -577,6 +577,11 @@ cursor: pointer;
 
 }
 
+/* Fix: Keep Add to Bag text visible for guest links */
+.book-page a.book-detail__add-button {
+    color: var(--book-paper);
+}
+
 .book-detail__add-label {
 overflow: hidden;
 
@@ -667,6 +672,66 @@ color: var(--book-muted);
     font-size: 15px;
 }
 
+.book-detail__metadata-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.book-detail__favorite-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--book-accent);
+    font: inherit;
+    font-size: 11px;
+    line-height: 1.5;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.book-detail__favorite-toggle:hover {
+    opacity: 0.65;
+}
+
+.book-detail__favorite-toggle.is-saved {
+    color: var(--book-ink);
+}
+
+.book-detail__favorite-toggle:disabled {
+    cursor: wait;
+    opacity: 0.55;
+}
+
+.book-detail__favorite-book-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.book-detail__favorite-toggle--book {
+    min-height: 28px;
+    padding: 0 10px;
+    border: 1px solid var(--book-ink);
+    color: var(--book-ink);
+}
+
+.book-detail__favorite-toggle--book.is-saved {
+    border-color: var(--book-accent);
+    color: var(--book-accent);
+}
+
+.book-detail__favorite-status {
+    margin: 0;
+    color: var(--book-muted);
+    font-size: 11px;
+    line-height: 1.4;
+}
 .book-detail__back {
     padding: 0;
     border: 0;

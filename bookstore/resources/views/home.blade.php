@@ -10,7 +10,7 @@
         <div class="section-subtitle">ON OUR SHELVES / 001</div>
         <div class="section-title-wrap">
             <h2 class="section-title">Worth making room for.</h2>
-            <a href="#" class="browse-link">Browse all books ↗</a>
+            <a href="{{ route('books.index') }}" class="browse-link">Browse all books ↗</a>
         </div>
     </div>
 

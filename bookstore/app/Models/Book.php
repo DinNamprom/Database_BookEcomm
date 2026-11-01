@@ -4,14 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Str;
 
 class Book extends Model
 {
-    protected function casts(): array
-    {
-        return ['price' => 'decimal:2'];
-    }
-
     /** @return BelongsTo<Author, $this> */
     public $timestamps = false; // Existing migration didn't have timestamps
 
@@ -36,6 +32,26 @@ class Book extends Model
         'in_stock' => 'boolean',
         'publish_date' => 'date',
     ];
+
+    protected static function booted(): void
+    {
+        static::creating(function (Book $book) {
+            if (filled($book->slug)) {
+                return;
+            }
+
+            $baseSlug = Str::slug($book->title) ?: 'book';
+            $slug = $baseSlug;
+            $counter = 2;
+
+            while (static::query()->where('slug', $slug)->exists()) {
+                $slug = "{$baseSlug}-{$counter}";
+                $counter++;
+            }
+
+            $book->slug = $slug;
+        });
+    }
 
     public function getRouteKeyName()
     {
